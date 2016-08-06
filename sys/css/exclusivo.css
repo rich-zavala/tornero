@@ -1,0 +1,62 @@
+.text-center{ text-align: center }
+.centrado{ margin: auto; }
+.correo {
+	font-size:12px;
+	color: #006699;
+}
+
+input.disable, select.disable, input.disable_1 {
+	border: 1px solid #7f9db9;
+	background:#FFFFFF;
+	color: #000000;
+}
+
+input.enable, select.enable, input.enable_1 {
+	border:none;
+	background:none;
+	color: #000000;
+}
+
+input.enable_1[type=text] {
+	text-align:center; }
+
+input[type=radio] {
+	border: none;
+	background:none;
+}
+
+.no-footer .highslide-footer {
+	display: none;
+}
+
+.bordear_tabla tr:nth-child(even) {background: #DADADA}
+.bordear_tabla tr:nth-child(odd) {background: #FFF}
+.bordear_tabla tr:hover{
+	background-color: #F8E8A0 !important;
+}
+
+.kreator_element{
+	width:120px;
+	height: 140px;
+	text-align:center;
+  display: inline-block;
+	cursor: pointer;
+  margin: 4px 10px;
+}
+.kreator_small{
+	width:130px;
+	height:62px;
+	display: inline-block;
+	margin:5px;
+	padding:4px;
+	line-height:14px;
+	overflow: hidden;
+	cursor: pointer;
+}
+.kreator_element:hover, .kreator_small:hover{	
+	background-color: #33ADFF;
+	border-radius: 6px;
+}
+.kreator_element:hover a, .kreator_small:hover a{
+	color: white;
+}

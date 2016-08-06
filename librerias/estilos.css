@@ -1,0 +1,171 @@
+body {
+  padding-top: 70px;
+}
+.template {
+  padding: 0px;
+}
+
+.fontSmall{ font-size: 13px; }
+.font11{ font-size: 11px; }
+.font12{ font-size: 12px; }
+.padding0{ padding: 0px !important }
+.padding5{ padding: 5px !important }
+.paddingLeft10{ padding-left: 10px !important; }
+.paddingLeft15{ padding-left: 15px !important; }
+.paddingLeft20{ padding-left: 20px !important; }
+.paddingRight10{ padding-right: 10px !important; }
+.paddingRight20{ padding-right: 20px !important; }
+.paddingTop5{ padding-top: 5px }
+.paddingTop10{ padding-top: 10px }
+.paddingBottom5{ padding-bottom: 5px }
+.margin0{ margin: 0px }
+.marginLeft0{ margin-left: 0px !important }
+.marginLeft10{ margin-left: 10px !important }
+.marginLeft20{ margin-left: 20px }
+.marginRight5{ margin-right: 5px !important }
+.marginRight10{ margin-right: 10px !important }
+.marginRight20{ margin-right: 20px }
+.marginBottom10{ margin-bottom: 10px }
+.marginBottom20{ margin-bottom: 20px }
+.marginBottom0{ margin-bottom: 0px }
+.marginBottom5{ margin-bottom: 5px }
+.marginBottom-15{ margin-bottom: -15px }
+.marginTop0{ margin-top: 0px }
+.marginTop5{ margin-top: 5px }
+.marginTop10{ margin-top: 10px }
+.marginTop20{ margin-top: 20px }
+.marginTop30{ margin-top: 30px }
+.w100{ width: 100% }
+.w100i{ width: 100% !important; }
+.wAuto{ width: auto; }
+.table-border-top thead tr th{ border-top: 2px solid #ddd !important; }
+.menuSecundario .panel-heading{ font-weight: bold; }
+.negritas{ font-weight: bold; }
+.normal{ font-weight: normal; }
+.ln1 { line-height: 1; }
+.manita{ cursor: pointer; }
+.help-block.with-errors{
+	font-size: .85em;
+	margin-bottom: 0;
+}
+.help-block.with-errors ul{ margin-bottom: 0; }
+.blockUI.blockOverlay { opacity: .2 !important; }
+.blockUI.blockMsg.blockPage {
+  background: url('../librerias/assets/ajax-loader.gif') no-repeat center center !important;
+  border: none !important;
+  height: 66px;
+}
+.menuSecundario .panel-heading, .menuSecundario .list-group-item{
+	padding: 4px 10px;
+  font-size: 12px;
+}
+.btn.badge{
+  font-weight: normal;
+  padding: 2px 10px;
+	min-width: 70px;
+}
+
+.cat-equipos{
+	padding-top: 5px;
+	transition: all .5s;
+}
+.cat-equipos:hover{ background-color: #f5f5f5; }
+.cat-equipos .btn{ margin-top: -2px; }
+.btn-group-circle { display: flex; }
+.table.table-middle TD, .table.table-middle TH{ vertical-align: middle; }
+.tabla-fecha{ width: 200px; display: inline-block; }
+.tabla-cancha{ width: 52px; display: inline-block; }
+.tabla-botones{ width: 86px; }
+.tabla-info{ width: 350px; }
+
+.inputSmall
+{
+	margin: auto;
+	width: 70px;
+}
+
+.puntajeJugador {
+  display: inline-block;
+}
+.partidoPuntaje{
+	white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.typeahead.dropdown-menu {
+  width: 65%;
+}
+
+/*Venta*/
+.venta-form-inicio th, .venta-form-inicio td{
+	vertical-align: middle !important;
+	white-space: nowrap;
+}
+.venta-form-inicio th{
+	width: 10%;
+	text-align: right;
+}
+.venta-form-inicio td{
+	width: 15%;
+}
+.venta-form-inicio th label{
+	margin: 0;
+}
+.venta-form-inicio .form-group, .venta-form-inicio td input, .venta-form-inicio td select{
+	width: 100% !important;
+}
+.venta-form-inicio .cliente-info{
+	padding-top: 5px;
+  display: inline-block;
+}
+.popover{ width: 400px; }
+.popover-content{ line-height: 1; }
+.table-productos-listado input.form-control,
+.table-productos-listado select.form-control,
+.table-productos-listado textarea.form-control{
+  padding: 1px 4px;
+	height: auto;
+}
+.table-productos-header th{
+	white-space: nowrap;
+}
+.table .table-productos-listado td{
+	padding: 4px;
+}
+input.producto-numerico {
+  width: 70px;
+  text-align: right;
+}
+input.producto-numerico-largo {
+  width: 80px;
+  text-align: right;
+}
+.producto-codigo{
+	width: 160px;
+}
+.table-productos-listado .fa-icon {
+  padding: 5px 4px;
+}
+.producto-informacion-complementaria{
+	min-width: 300px;
+}
+.producto-lote{
+	min-width: 60px;
+}
+.table .table-productos-listado .campo-texto{
+	padding-top: 7px;
+}
+.typeAheadOption span{
+	min-width: 38px;
+	display: inline-block;
+	margin-right: 10px;
+}
+.clienteAjax{
+	background-image: url(assets/ajax-loader-small.gif);	
+	background-position: right 10px center;
+	background-repeat: no-repeat;
+}
+.btn-table{
+	padding-top: 4px;
+	padding-bottom: 4px;
+}

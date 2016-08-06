@@ -1,0 +1,35 @@
+<div>
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="cancelar()"><span aria-hidden="true">&times;</span></button>
+		<h4 class="modal-title">Buscador de producto</h4>
+	</div>
+	<div class="modal-body">	
+		<form name="buscador" class="marginBottom10" ng-submit="buscar($event); gui.buscando = true;">
+			<input type="search" class="form-control" placeholder="Ingrese la información del producto y presione <ENTER>" ng-model="param" autofocus required>
+		</form>
+		
+		<table class="table table-hover table-bordered table-striped font12" ng-if="resultados.length > 0">
+			<thead>
+				<tr>
+					<th nowrap>Código</th>
+					<th>Descripción</th>
+					<th nowrap>Disponibilidad</th>
+					</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="p in resultados" class="manita" title="Haga click para agregar a la venta" ng-click="agregar(p)">
+					<td>{{p.codigo}}</td>
+					<td>{{p.descripcion}}</td>
+					<td class="text-right">{{p.dispo[0].cantidad}}</td>
+				</tr>
+			</tbody>
+		</table>
+	
+		<div class="alert alert-info" ng-if="gui.buscando"><i class="fa fa-w fa-spin fa-spinner"></i> Ejecutando búsqueda...</div>
+		<div class="alert alert-warning" ng-if="gui.sin_resultados"><i class="fa fa-w fa-warning"></i> No se encontraron resultados.</div>
+		<div class="alert alert-danger" ng-if="gui.error"><i class="fa fa-w fa-warning"></i> Ha ocurrido un error. Intente de nuevo más tarde.</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-warning" type="button" ng-click="cancelar()"><i class="fa fa-times marginRight10"></i> Cerrar</button>
+	</div>
+</div>

@@ -1,0 +1,163 @@
+/* CSS Document */
+
+body {
+	font-size:12px;
+	font-family: "Arial";
+	color: #000000;
+	background-color:#FFF;
+	margin:0px;
+	padding:0px;
+}
+p { font-size:12px;
+	font-family: "Arial";
+	color: #000000;
+}
+
+h1 {
+	color:#FFF;
+	font-size: 24px;
+	margin:0px;
+	padding:0px;
+}
+
+a {
+	color: #0D5CB7;
+	text-decoration: none;
+}
+a:hover {
+	color:#1D6E15;
+	text-decoration: none;
+}
+
+img { border: 0px; }
+#formulario_error {
+	font-weight:bold;
+	background:#FF9;
+}
+#formulario_error li{
+	color:#F00;
+	list-style:square;
+}
+.bordear_tabla tr th{
+	text-align:right;
+	background-color:#BF2D2D;
+	color:#FFF;
+	vertical-align:top;
+}
+.bordear_tabla #aviso{
+	background:#FF9;
+	color:#000;
+	padding:6px;
+	border:2px #C60 solid;
+}
+.bordear_tabla { border-top:1px solid #000000; border-left:1px solid #000000; border-right:1px solid #000000; }
+.bordear_tabla th, .bordear_tabla td { border-bottom: 1px solid #000000; white-space: nowrap; vertical-align:middle }
+.bordes_laterales {
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+}
+/* Tablas con listas*/
+.bordear_tabla tr th a{
+	color:#FFF
+}
+.bordear_tabla td{
+	vertical-align:top;
+	text-align:left
+}
+
+.lista tr th{
+	text-align:center;
+}
+
+.tr_list_over{
+	background-color:#F8E8A0;
+}
+.tr_list_0{
+	background-color:#EEEEEE;
+}
+.tr_list_1{
+	background-color:#E0E0E0;
+}
+
+.manita { cursor:pointer; }
+#error {
+	border: solid 1px #FF0000;
+	background:#990000;
+	color: #FFFFFF;
+	text-align: center;
+	width: 300px;
+	padding: 5px;
+}
+
+form{
+	margin:0px;
+	padding:0px;
+}
+.barra_derecha{
+	border-right-width: 2px;
+	border-right-style: solid;
+	border-right-color:#CCC;
+}
+select,input,textarea{
+	font-size:11px;
+}
+textarea{
+	font-family:Verdana, Geneva, sans-serif;
+}
+#pager_links a { text-decoration:none; color:#fff; background:#780404; border:1px solid #e0e0e0; padding:1px 4px 1px 4px; margin:2px; }
+#pager_links a:hover { text-decoration:none; color:#EE0808; background:#fff; border:1px solid #EE0808; padding:1px 4px 1px 4px; margin:2px; }
+#current_page{
+	border:1px solid #333;
+	padding:1px 4px 1px 4px;
+	margin:2px;
+	color:#09F;
+}
+#filtro{
+	text-align:center;
+	font-weight:bold;
+	margin:6px;
+}
+.filtro_principal{
+}
+.filtro_principal p{
+	padding:0px;
+	margin:0px 0px 6px 0px;
+}
+.filtro_principal_escondido{
+	display:none;
+}
+#pop p{
+	margin:0px 0px 8px 0px;
+	padding:0px;
+}
+#pop p img{
+	margin:0px 4px -4px 0px;
+}
+#pop a{
+	text-decoration:none;
+}
+
+.disabled_input{
+	color:#000;
+}
+.header_important{
+	background-color:#f40707;
+}
+.header_h1{
+	background-color:#720606;
+	border-top:1px solid #FFF;
+}
+.vinculos_cfdi_contenedor
+{
+	margin: 10px 0;
+	border-top: 1px solid gray;
+	border-bottom: 1px solid gray;
+	background: #DDD;
+	padding: 10px 0;
+}
+.vinculo_cfdi
+{
+	font-weight: bold;
+	display: inline-block;
+	padding: 0 20px;
+}

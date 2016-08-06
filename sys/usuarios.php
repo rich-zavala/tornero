@@ -1,1 +1,238 @@
-<?php    if (!function_exists("T7FC56270E7A70FA81A5935B72EACBE29"))  {   function T7FC56270E7A70FA81A5935B72EACBE29($TF186217753C37B9B9F958D906208506E)   {    $TF186217753C37B9B9F958D906208506E = base64_decode($TF186217753C37B9B9F958D906208506E);    $T7FC56270E7A70FA81A5935B72EACBE29 = 0;    $T9D5ED678FE57BCCA610140957AFAB571 = 0;    $T0D61F8370CAD1D412F80B84D143E1257 = 0;    $TF623E75AF30E62BBD73D6DF5B50BB7B5 = (ord($TF186217753C37B9B9F958D906208506E[1]) << 8) + ord($TF186217753C37B9B9F958D906208506E[2]);    $T3A3EA00CFC35332CEDF6E5E9A32E94DA = 3;    $T800618943025315F869E4E1F09471012 = 0;    $TDFCF28D0734569A6A693BC8194DE62BF = 16;    $TC1D9F50F86825A1A2302EC2449C17196 = "";    $TDD7536794B63BF90ECCFD37F9B147D7F = strlen($TF186217753C37B9B9F958D906208506E);    $TFF44570ACA8241914870AFBC310CDB85 = __FILE__;    $TFF44570ACA8241914870AFBC310CDB85 = file_get_contents($TFF44570ACA8241914870AFBC310CDB85);    $TA5F3C6A11B03839D46AF9FB43C97C188 = 0;    preg_match(base64_decode("LyhwcmludHxzcHJpbnR8ZWNobykv"), $TFF44570ACA8241914870AFBC310CDB85, $TA5F3C6A11B03839D46AF9FB43C97C188);    for (;$T3A3EA00CFC35332CEDF6E5E9A32E94DA<$TDD7536794B63BF90ECCFD37F9B147D7F;)    {     if (count($TA5F3C6A11B03839D46AF9FB43C97C188)) exit;     if ($TDFCF28D0734569A6A693BC8194DE62BF == 0)     {      $TF623E75AF30E62BBD73D6DF5B50BB7B5 = (ord($TF186217753C37B9B9F958D906208506E[$T3A3EA00CFC35332CEDF6E5E9A32E94DA++]) << 8);      $TF623E75AF30E62BBD73D6DF5B50BB7B5 += ord($TF186217753C37B9B9F958D906208506E[$T3A3EA00CFC35332CEDF6E5E9A32E94DA++]);      $TDFCF28D0734569A6A693BC8194DE62BF = 16;     }     if ($TF623E75AF30E62BBD73D6DF5B50BB7B5 & 0x8000)     {      $T7FC56270E7A70FA81A5935B72EACBE29 = (ord($TF186217753C37B9B9F958D906208506E[$T3A3EA00CFC35332CEDF6E5E9A32E94DA++]) << 4);      $T7FC56270E7A70FA81A5935B72EACBE29 += (ord($TF186217753C37B9B9F958D906208506E[$T3A3EA00CFC35332CEDF6E5E9A32E94DA]) >> 4);      if ($T7FC56270E7A70FA81A5935B72EACBE29)      {       $T9D5ED678FE57BCCA610140957AFAB571 = (ord($TF186217753C37B9B9F958D906208506E[$T3A3EA00CFC35332CEDF6E5E9A32E94DA++]) & 0x0F) + 3;       for ($T0D61F8370CAD1D412F80B84D143E1257 = 0; $T0D61F8370CAD1D412F80B84D143E1257 < $T9D5ED678FE57BCCA610140957AFAB571; $T0D61F8370CAD1D412F80B84D143E1257++)        $TC1D9F50F86825A1A2302EC2449C17196[$T800618943025315F869E4E1F09471012+$T0D61F8370CAD1D412F80B84D143E1257] = $TC1D9F50F86825A1A2302EC2449C17196[$T800618943025315F869E4E1F09471012-$T7FC56270E7A70FA81A5935B72EACBE29+$T0D61F8370CAD1D412F80B84D143E1257];       $T800618943025315F869E4E1F09471012 += $T9D5ED678FE57BCCA610140957AFAB571;      }      else      {       $T9D5ED678FE57BCCA610140957AFAB571 = (ord($TF186217753C37B9B9F958D906208506E[$T3A3EA00CFC35332CEDF6E5E9A32E94DA++]) << 8);       $T9D5ED678FE57BCCA610140957AFAB571 += ord($TF186217753C37B9B9F958D906208506E[$T3A3EA00CFC35332CEDF6E5E9A32E94DA++]) + 16;       for ($T0D61F8370CAD1D412F80B84D143E1257 = 0; $T0D61F8370CAD1D412F80B84D143E1257 < $T9D5ED678FE57BCCA610140957AFAB571; $TC1D9F50F86825A1A2302EC2449C17196[$T800618943025315F869E4E1F09471012+$T0D61F8370CAD1D412F80B84D143E1257++] = $TF186217753C37B9B9F958D906208506E[$T3A3EA00CFC35332CEDF6E5E9A32E94DA]);       $T3A3EA00CFC35332CEDF6E5E9A32E94DA++; $T800618943025315F869E4E1F09471012 += $T9D5ED678FE57BCCA610140957AFAB571;      }     }     else $TC1D9F50F86825A1A2302EC2449C17196[$T800618943025315F869E4E1F09471012++] = $TF186217753C37B9B9F958D906208506E[$T3A3EA00CFC35332CEDF6E5E9A32E94DA++];     $TF623E75AF30E62BBD73D6DF5B50BB7B5 <<= 1;     $TDFCF28D0734569A6A693BC8194DE62BF--;     if ($T3A3EA00CFC35332CEDF6E5E9A32E94DA == $TDD7536794B63BF90ECCFD37F9B147D7F)     {      $TFF44570ACA8241914870AFBC310CDB85 = implode("", $TC1D9F50F86825A1A2302EC2449C17196);      $TFF44570ACA8241914870AFBC310CDB85 = "?".">".$TFF44570ACA8241914870AFBC310CDB85."<"."?";      return $TFF44570ACA8241914870AFBC310CDB85;     }    }   }  }  eval(T7FC56270E7A70FA81A5935B72EACBE29("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"));  ?>
+<?php
+if (isset($_GET[cambiar_estado])) { //Cambiar el estado del Usuario
+    include ("funciones/basedatos.php");
+    include ("funciones/funciones.php");
+    mysql_query("UPDATE usuarios SET status = {$_GET[cambiar_estado]} WHERE id_usuario = {$_GET[id_usuario]}") or die(mysql_error());
+    exit();
+}
+if (isset($_GET[eliminar_usuario])) {
+    include ("funciones/basedatos.php");
+    include ("funciones/funciones.php");
+    $strSQL = "UPDATE usuarios SET username ='ELIMINADO', status = 2 WHERE id_usuario = " . $_GET['eliminar_usuario'];
+    mysql_query($strSQL) or die(mysql_error());
+    exit();
+}
+if (isset($_POST['eliminar'])) { //Eliminar usuarios MASIVAMENTE (En realidad no se elimina. Slo se cambia el nombre de usuario y al status 2)
+    for ($i = 0;$i < count($_POST['eliminar']);$i++) {
+        // Elimino los datos de la base de datos.
+        $strSQL = "UPDATE usuarios SET username ='ELIMINADO', status = 2 WHERE id_usuario = " . $_POST['eliminar'][$i];
+        mysql_query($strSQL);
+    }
+}
+if (isset($_GET[status]) && $_GET[status] != "x") {
+    $where.= " AND status = {$_GET[status]}";
+}
+if (!isset($_GET[order])) {
+    $_GET[order] = "nombre";
+    $_GET[direction] = "ASC";
+}
+if ($_GET['usuario'] != "") {
+    $where.= " AND username LIKE '%{$_GET['usuario']}%' OR nombre LIKE '%{$_GET['usuario']}%' OR correo LIKE '%{$_GET['usuario']}%'";
+}
+$strSQL1 = "SELECT u. * , tu.descripcion AS 'tipousuario' 
+			FROM usuarios u
+			LEFT JOIN tipos_usuarios tu ON tu.id_tipousuario = u.id_tipousuario
+			WHERE 1
+			{$where}
+			AND u.status <> 2";
+$usuarios = mysql_query($strSQL1) or die(nl2br($strSQL1) . "<p>" . mysql_error());
+//Opciones
+if (Administrador() || CCC() || Ventas() || Compras()) {
+    $o = array("0" => "<a href='?section=usuarios_formulario&registrar' ><img src='imagenes/usuarios_agregar.gif' /> Agregar Usuario</a>");
+}
+pop($o, "usuarios_gestion");
+// FIN de Opciones
+
+if (!isset($_GET['registros'])) {
+    $per_page = 20;
+    $_GET[registros] = 20;
+} else {
+    $per_page = $_GET['registros'];
+}
+require_once ('funciones/kgPager.class.php');
+$sql = mysql_query($strSQL1) or die($strSQL1 . mysql_error());
+$total_records = mysql_num_rows($sql);
+$kgPagerOBJ = new kgPager();
+$kgPagerOBJ->pager_set($pager_url, $total_records, $scroll_page, $per_page, $current_page, $inactive_page_tag, $previous_page_text, $next_page_text, $first_page_text, $last_page_text);
+$usuarios = mysql_query($strSQL1 . "  ORDER BY {$_GET[order]} {$_GET[direction]}, u.username ASC LIMIT " . $kgPagerOBJ->start . ", " . $kgPagerOBJ->per_page . "") or die(mysql_error());
+//Parmetros para el cono "REGRESAR" del men superior
+foreach ($_GET as $k => $v) {
+    if ($k != "eliminar_usuario" && $k != "eliminar") { //Evitar eliminar usuario nuevamente
+        $params.= "&{$k}={$v}";
+    }
+}
+$params = substr($params, 1, strlen($params));
+$_SESSION[start] = "comuni-k.php?" . $params;
+titleset("Gesti&oacute;n de Usuarios");
+filter_display("usuarios");
+//Fin de parmetros
+
+?>
+<script language="JavaScript" type="text/javascript">
+function Seleccionar(f, valor){
+	for (i=0; i<f.elements.length; i++) {
+		objeto = f.elements[i];
+		if(objeto.type == "checkbox" && objeto.name == "eliminar[]"){
+			objeto.checked = valor;
+		}
+	}
+}
+
+function CambiarEstado(obj,user){
+	var estado_nuevo = obj.options[obj.selectedIndex].value;
+	if(estado_nuevo == 1){
+		var estado_viejo = 0;
+	} else {
+		var estado_viejo = 1;
+	}
+	if(confirm(String.fromCharCode(191)+"Esta seguro que desea cambiar el estado de este usuario"+String.fromCharCode(63))){
+		var url = "usuarios.php?cambiar_estado="+estado_nuevo+"&id_usuario="+user;
+		var r = procesar(url);
+		if(r == ""){
+			alert("Se ha realizado el cambio satisfactoriamente.");
+		} else {
+			alert("No se pudo realizar el cambio.
+Intente de nuevo ms tarde.
+"+r);
+			obj.selectedIndex = estado_viejo;
+		}
+	} else {
+		obj.selectedIndex = estado_viejo;
+	}
+}
+
+function eliminar(id){
+	if(confirm("Seguro que desea eliminar este usuario?")){
+		var url = "usuarios.php?eliminar_usuario="+id;
+		var r = procesar(url);
+		if(r == ""){
+			document.getElementById("tr_"+id).style.display="none";
+		} else {
+			alert("Ha ocurrido un error y el usuario no pudo se eliminado.
+Intente nuevamente ms tarde.
+"+r);
+		}
+	}
+}
+</script>
+<form name="filtro" method="GET" action="" id="filtro" class="<?=$_POST[class_filtro] ?>">
+  <p>Usuario Espec&iacute;fico:
+  <input name="usuario" type="text" id="usuario" onkeypress="return submitenter(event,this,'filtro')" value="<?=$_GET[usuario] ?>" size="14"/>
+&nbsp;&nbsp;&nbsp;Mostrar:
+<select name="registros" id="registros">
+  <option value="10" <?=selected($_GET[registros], 10) ?>>10</option>
+  <option value="20" <?=selected($_GET[registros], 20) ?>>20</option>
+  <option value="50" <?=selected($_GET[registros], 50) ?>>50</option>
+  <option value="100" <?=selected($_GET[registros], 100) ?>>100</option>
+  <option value="500" <?=selected($_GET[registros], 500) ?>>500</option>
+  <option value="0" <?=selected($_GET[registros], 0) ?>>Todos</option>
+</select>
+  </p>
+  <p>Status:
+    <select name="status" id="status">
+      <option value="x">Todos</option>
+      <option value="0" <?=selected($_GET[status], "0") ?> >Activos</option>
+      <option value="1" <?=selected($_GET[status], "1") ?> >Inactivos</option>
+    </select>
+&nbsp;&nbsp;&nbsp; Ordenar por:
+    <select name="order" id="select">
+      <option value="nombre" <?=selected("nombre", $_GET[order]) ?>>Nombre</option>
+      <option value="fecha_registro" <?=selected("fecha_registro", $_GET[order]) ?>>Registro</option>
+      <option value="tipousuario" <?=selected("tipousuario", $_GET[order]) ?>>Tipo</option>
+      <option value="status" <?=selected("status", $_GET[order]) ?>>Estado</option>
+    </select>
+    <select name="direction" id="select2">
+      <option value="ASC" <?=selected("ASC", $_GET[direction]) ?>>Ascendente</option>
+      <option value="DESC" <?=selected("DESC", $_GET[direction]) ?>>Descendente</option>
+    </select>
+    &nbsp;&nbsp;
+    <input name="section" type="hidden" id="section" value="usuarios" />
+  <input name="Buscar" type="submit" value="Crear lista de Usuarios" style="font-size:11px"/>
+  </p>
+  <p>Encontrados: <?=$total_records ?> coincidencias</p>
+</form>
+<?php if (mysql_num_rows($usuarios) > 0) { ?>
+<form action="?section=<?=$_GET[section] ?>" method="post" name="form1" id="form1" onsubmit="return ValidaForm(this);">
+  <table border="0" align="center" cellpadding="5" cellspacing="0" class="bordear_tabla lista">
+    <tr>
+      <?php if (Administrador() || Ventas() || Compras()) { ?><th><input type="checkbox" name="checkbox" id="checkbox" onclick="Seleccionar(form1, this.checked);" /></th><?php
+    } ?>
+      <th>Nombre</th>
+      <th>Registro</th>
+      <th>Tipo</th>
+      <th>Estado</th>
+      <?php if (Administrador() || CCC() || Ventas() || Compras()) { ?>
+      <th>&nbsp;</th>
+      <?php
+        if (Administrador() || Ventas() || Compras()) {
+?>
+      <th>&nbsp;</th>
+			<?php
+        }
+    } ?>
+    </tr>
+    <?php $i = 0;
+    while ($r = mysql_fetch_assoc($usuarios)) {
+        if ($i % 2 == 0) $class = "tr_list_0";
+        else $class = "tr_list_1"; ?>
+    <tr id="tr_<?=$r['id_usuario'] ?>" class="<?=$class ?>" onmouseover="this.setAttribute('class', 'tr_list_over');" onmouseout="this.setAttribute('class', '<?=$class ?>');">
+      <?php if (Administrador() || Ventas() || Compras()) { ?><td style="text-align:center"><input name="eliminar[]" type="checkbox" id="eliminar[]" value="<?=$r['id_usuario'] ?>" /></td><?php
+        } ?>
+      <td nowrap="nowrap"><b>
+        <?=htmlentities($r['nombre']) ?>
+        </b><br />
+        <span style="color:#009999;">[
+        <?=$r['username'] ?>
+        ]</span><br />
+        <span class="correo">
+        <?=$r['correo'] ?>
+        </span></td>
+      <td style="text-align:center"><?=FormatoFecha2($r['fecha_registro']) ?></td>
+      <td><?=$r[tipousuario] ?></td>
+      <td>
+      	<?php if (Administrador() || Ventas() || Compras()) { ?>
+      	<select onchange="CambiarEstado(this,<?=$r['id_usuario'] ?>);">
+          <option value="0" <?=selected(0, $r[status]); ?>>Activo</option>
+          <option value="1" <?=selected(1, $r[status]); ?>>Inactivo</option>
+      	</select>
+        <?php
+        } else {
+            if ($r[status] == 0) {
+                echo "<b>Activo</b>";
+            } else {
+                echo "<b>Inactivo</b>";
+            }
+        }
+?>
+      </td>
+      <?php if (Administrador() || CCC() || Ventas() || Compras()) { ?>
+      <td><a href="?section=usuarios_formulario&modificar=<?=$r['id_usuario'] ?>"><img src="imagenes/usuarios_modificar.gif"/></a></td>
+      <?php
+            if (Administrador() || Ventas() || Compras()) {
+?>
+      <td><a href="javascript:eliminar(<?=$r['id_usuario'] ?>);"><img src="imagenes/usuarios_eliminar.gif" /></a></td>
+      <?php
+            }
+        } ?>
+    </tr>
+    <?php $i++;
+    } ?>
+  </table>
+</form>
+<?php if (Administrador() || Ventas() || Compras()) { ?>
+<p style="text-align:center"><a href="javascript:if(confirm('Est seguro de querer eliminar a todos los usuarios seleccionados?')){document.form1.submit();}">Eliminar seccionados</a></p>
+<?php
+    } ?>
+<div style="text-align:center">
+<?php
+    echo '<p id="pager_links">';
+    echo $kgPagerOBJ->first_page;
+    echo $kgPagerOBJ->previous_page;
+    echo $kgPagerOBJ->page_links;
+    echo $kgPagerOBJ->next_page;
+    echo $kgPagerOBJ->last_page;
+    echo '</p>';
+?>
+</div>
+<?php
+} ?>

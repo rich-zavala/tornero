@@ -102,11 +102,11 @@ body {
 	white-space: nowrap;
 }
 .venta-form-inicio th{
-	width: 10%;
+	width: 9%;
 	text-align: right;
 }
 .venta-form-inicio td{
-	width: 15%;
+	width: 16%;
 }
 .venta-form-inicio th label{
 	margin: 0;
@@ -117,6 +117,9 @@ body {
 .venta-form-inicio .cliente-info{
 	padding-top: 5px;
   display: inline-block;
+	overflow: hidden;
+	max-width: calc(100% - 124px);
+	text-overflow: ellipsis;
 }
 .popover{ width: 400px; }
 .popover-content{ line-height: 1; }

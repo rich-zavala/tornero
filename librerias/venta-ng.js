@@ -21,7 +21,6 @@ app.controller('ventaFormulario', ['$scope', '$rootScope', '$http', '$filter', '
 			serie: _serie,
 			tipo: 'f',
 			fecha_factura: moment().format("YYYY-MM-DD"),
-			// fecha_captura: 
 			id_cliente: null,
 			id_almacen: $scope.almacen_seleccionado.id,
 			licitacion: '_normal_',
@@ -34,9 +33,14 @@ app.controller('ventaFormulario', ['$scope', '$rootScope', '$http', '$filter', '
 			noap: _noap,
 			nocertificado: _nocertificado,
 			id_facturista: _facturista,
-			importe: 0
+			importe: 0,
+			recargo_id: _recargos[0].id,
+			recargo_concepto: _recargos[0].etiqueta,
+			recargo_porcentaje: _recargos[0].porcentaje,
+			recargo_importe: 0
 		},
-		productos: []
+		productos: [],
+		recargo: _recargos[0]
 	};
 	
 	//Actualizar folio de los productos cuando cambie el folio
@@ -383,10 +387,16 @@ app.controller('ventaFormulario', ['$scope', '$rootScope', '$http', '$filter', '
 			subtotal: 0,
 			iva: 0
 		};
+		$scope.f.factura.recargo_importe = 0;
 		angular.forEach($scope.f.productos, function(p){
 			var p = p.factura;
-			$scope.sumas.subtotal += Math.round((p.canti_ * p.precio) * 100) / 100;
-			$scope.sumas.iva += Math.round((p.canti_ * (p.precio * ( p.iva / 100 ))) * 100) / 100;
+			var subtotal_producto = Math.round((p.canti_ * p.precio) * 100) / 100;
+			$scope.sumas.subtotal += subtotal_producto;
+			
+			var recargo_producto = Math.round((subtotal_producto * ($scope.f.recargo.porcentaje / 100)) * 100) / 100;
+			$scope.f.factura.recargo_importe += recargo_producto;
+			
+			$scope.sumas.iva += Math.round(( (subtotal_producto + recargo_producto) * ( p.iva / 100 ) ) * 100) / 100;
 		});
 	}
 	
@@ -404,10 +414,32 @@ app.controller('ventaFormulario', ['$scope', '$rootScope', '$http', '$filter', '
 		$scope.f.factura.leyenda = _leyenda;
 		$scope.f.factura.fecha_factura = _fecha_factura;
 		$scope.f.factura.tipo = (_folio.indexOf('NOTA') >= 0) ? 'n' : 'f';
+		
+		/* Recargo */
+		if(_recargo > 0)
+		{
+			$scope.f.recargo = _recargos.find(function(r){ if(r.id == _recargo) return r; });
+			if(typeof $scope.f.recargo == 'undefined') //El recargo está inactivo o eliminado
+			{
+				var recargo_temporal = {
+					id: _recargo,
+					etiqueta: _recargo_concepto,
+					porcentaje: parseFloat(_recargo_porcentaje)
+				};
+				_recargos.push(recargo_temporal);
+				$scope.f.recargo = recargo_temporal;
+			}
+		}
 	}
 	
-	/* Verificador de folio */
-	// PENDIENTE
+	/* Manejador de recargos */
+	$scope.recargos = _recargos;
+	$scope.$watch('f.recargo', function(o){
+		$scope.sumar();
+		$scope.f.factura.recargo_id = $scope.f.recargo.id;
+		$scope.f.factura.recargo_concepto = $scope.f.recargo.etiqueta;
+		$scope.f.factura.recargo_porcentaje = $scope.f.recargo.porcentaje;
+	});
 	
 	/* Submit! */
 	//Set alerts
@@ -495,9 +527,7 @@ app.controller('ventaFormulario', ['$scope', '$rootScope', '$http', '$filter', '
 						unBlock();
 					}).success(function(response){
 						if(typeof response.folio != "undefined" && (response.folio > 0 || response.folio.indexOf('NOTA') >= 0))
-						{
 							window.location = "comuni-k.php?section=ventas_detalle&folio=" + response.folio + "&serie=" + response.serie;
-						}
 						else
 						{
 							$scope.alerts.error = true;

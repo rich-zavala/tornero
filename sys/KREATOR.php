@@ -8,19 +8,12 @@ if(!isset($_GET['small']))
 	{
 		if($s[3]>-1)
 		{
+			$goto1 = null;
 			if($s[3]=="1")
-			{
-				$goto1 = "return hs.htmlExpand(this, { objectType: 'ajax', width:{$s[4]}, heigth:{$s[5]}, headingText:'{$s[1]}'})";
-				$goto2 = "return hs.htmlExpand(document.getElementById('link{$s[2]}'), { objectType: 'ajax', width:{$s[4]}, heigth:{$s[5]}, headingText:'{$s[1]}'})";
-			}
-			else
-			{
-				$goto1 = "goto('{$s[0]}')";
-				$goto2 = "goto('{$s[0]}')";
-			}
+				$goto1 = "onclick=\"return hs.htmlExpand(this, { objectType: 'ajax', width:{$s[4]}, heigth:{$s[5]}, headingText:'{$s[1]}'})\"";
+			
 			echo "
-			<a class='kreator_element' href=\"{$s[0]}\" id=\"link{$s[2]}\">
-			<!--<div class='kreator_element' id=\"{$s[2]}\" class=\"manita\" onclick=\"{$goto2}\" >-->
+			<a class='kreator_element' href=\"{$s[0]}\" id=\"link{$s[2]}\" {$goto1}>
 				<table width=\"100%\" height=\"100%\" >
 					<tr>
 						<td valign=\"middle\">
@@ -46,24 +39,15 @@ else
 <div class="text-center">
 <?php
 	foreach($o as $s){
-			if($s[3]=="1"){
-				$goto1 = "return hs.htmlExpand(this, { objectType: 'ajax', width:{$s[4]}, heigth:{$s[5]}, headingText:'{$s[1]}'})";
-				$goto2 = "return hs.htmlExpand(document.getElementById('link{$s[2]}'), { objectType: 'ajax', width:{$s[4]}, heigth:{$s[5]}, headingText:'{$s[1]}'})";
-			}
-			else {
-				$goto1 = "goto('{$s[0]}')";
-				$goto2 = "goto('{$s[0]}')";
-			}
+		$goto1 = null;
+		if($s[3]=="1")
+			$goto1 = "onclick=\"return hs.htmlExpand(this, { objectType: 'ajax', width:{$s[4]}, heigth:{$s[5]}, headingText:'{$s[1]}'})\"";
 ?>
-	<div class="kreator_small" onclick="<?=$goto2?>">
-    <center>
-    	<a href="<?=$s[0]?>" id="link<?=$s[2]?>">
-        <img src="iconos-mini/<?=$s[2]?>.png" />
-        <br />
-        <?=$s[1]?>
-      </a>
-    </center>
-  </div>
+	<a class="kreator_small" href="<?=$s[0]?>" id="link<?=$s[2]?>" <?=$goto1?>>
+			<img src="iconos-mini/<?=$s[2]?>.png" />
+			<br />
+			<?=$s[1]?>
+  </a>
 <?php	
 	}
 ?>

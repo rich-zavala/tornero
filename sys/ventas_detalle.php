@@ -70,11 +70,9 @@ titleset("Detalles de la Venta &quot;{$_GET[folio]}&quot;");
 			<?php if($tipo == "f"){ ?>
       <tr>
         <th>M&eacute;todo de pago</th>
-        <td colspan="3"><?=$r[metodoDePago]?></td>
-      </tr>
-      <tr>
+        <td><?=$r[metodoDePago]?></td>
         <th>No. cta de pago</th>
-        <td colspan="3"><?=$r[NumCtaPago]?></td>
+        <td><?=$r[NumCtaPago]?></td>
       </tr>
 			<?php } ?>
       <?php if($tipo == "f"){ ?>
@@ -98,25 +96,38 @@ titleset("Detalles de la Venta &quot;{$_GET[folio]}&quot;");
 				$datos .= $cliente_data[6].", ".$cliente_data[7].", ".$cliente_data[8].", ".$cliente_data[9]."\n";
 				$datos .= "RFC: ".$cliente_data[0];
 				?>
-        <td colspan="3"><pre style="margin:0px; padding:0px"><?=$datos?></pre></td>
+        <td colspan="3"><?=nl2br($datos)?></td>
       </tr>
       <?php } ?>
       <tr>
       	<th>Vendedor</th>
         <td colspan="3"><?=$r[vendedor]?></td>
       </tr>
+			<?php
+			$fInfo = $r;
+			if($fInfo['recargo_id'] > 0){
+			?>
+      <tr>
+      	<th><?=($fInfo['recargo_porcentaje'] > 0) ? 'Recargo' : 'Descuento'?></th>
+        <td colspan="3"><?=$r['recargo_concepto']?> <b>(<?=$r['recargo_porcentaje']?>%)</b></td>
+      </tr>
+			<?php } ?>
     </table>
     <br />
     <table border="1" align="center" cellpadding="5" cellspacing="0" style="border-collapse:collapse;">
       <tr bgcolor="#BF2D2D" style="color: white">
-        <th>C&oacute;digo Barras</th>
+        <th>C&oacute;digo</th>
         <th>Descripci&oacute;n</th>
         <th>Lote</th>
-        <th>Cant. Almacén</th>
-        <th>Cant. Factura</th>
+        <th>Cant.<br>Almacén</th>
+        <th>Cant.<br>Factura</th>
         <th>Precio</th>
-        <th style="display:none;">% Desc</th>
+        <?php if($fInfo['recargo_id'] != ''){ ?>
+				<th><?=($fInfo['recargo_porcentaje'] > 0) ? 'Recargo' : 'Descuento'?></th>
+        <th>Precio<br>final</th>
+				<?php } ?>
         <th>% IVA</th>
+        <th>Total</th>
         <!--<th>Sub-Total</th>-->
       </tr>
   <?php
@@ -150,13 +161,22 @@ titleset("Detalles de la Venta &quot;{$_GET[folio]}&quot;");
 	$ids_= array();
 	while($r = mysql_fetch_assoc($q))
 	{
-		$ids_[] = $r[id_producto];
+		$ids_[] = $r['id_producto'];
 		if($i%2 == 0) $class = "tr_list_0"; else $class = "tr_list_1";
 		$i++;
-		$cantidad = $r[canti_];
+		$cantidad = $r['canti_'];
 	
-		$sub_total += $cantidad*$r[precio];
-		$iva += $cantidad*$r[precio]*($r[iva]/100);
+		$sub_total_producto = $cantidad * $r['precio'];
+		$sub_total += $sub_total_producto;
+		
+		//Recargo por producto individual
+		$recargo_producto = $sub_total_producto * ($fInfo['recargo_porcentaje'] / 100);
+		$recargo_producto_unit = $r['precio'] * ($fInfo['recargo_porcentaje'] / 100);
+		
+		$sub_total += $recargo_producto;
+		$iva += ($sub_total_producto + $recargo_producto) * ($r['iva'] / 100);
+		
+		$total = (($r['precio'] + round($recargo_producto_unit, 3)) + (($r['precio'] + round($recargo_producto_unit, 3)) * ($r['iva'] / 100))) * $cantidad;
 	?>
   <tr class="<?=$class?>"
   onMouseOver="this.setAttribute('class', 'tr_list_over');"
@@ -166,39 +186,38 @@ titleset("Detalles de la Venta &quot;{$_GET[folio]}&quot;");
     <td style="white-space:normal">
 		<?php
 			echo $r['descripcion'];
-			if($r[complemento] != "0" or $r['complemento'] != '')
-			{
-				echo "<br /><i style='color:#1F7D9F; font-size:11px;'>".nl2br(htmlentities($r[complemento]))."</i>";
-			}
+			if($r['complemento'] != "0" or $r['complemento'] != '')
+				echo "<br /><i style='color:#1F7D9F; font-size:11px;'>" . nl2br(htmlentities($r['complemento']))."</i>";
 		?>
     </td>
-    <td style="text-align:center"><?=htmlentities($r[lote])?></td>
-    <td style="text-align:right"><?=$r[cantidad]?></td>
-    <td style="text-align:right"><?=$r[canti_]?></td>
-    <td style="text-align:right"><?=money($r[precio])?></td>
-    <td style="text-align:right; display:none;"><?=money($r[descuento])?></td>
-    <td style="text-align:right"><?=money($r[iva])?></td>
-   <!-- <td style="text-align:right"><?=money($r[cantidad]*$r[precio])?></td>-->
+    <td style="text-align:center"><?=htmlentities($r['lote'])?></td>
+    <td style="text-align:right"><?=$r['cantidad']?></td>
+    <td style="text-align:right"><?=$r['canti_']?></td>
+    <td style="text-align:right"><?=money($r['precio'])?></td>
+    <?php if($fInfo['recargo_id'] != ''){ ?>
+		<td style="text-align:right"><?=number_format($recargo_producto_unit, 3)?></td>
+    <td style="text-align:right"><?=money($r['precio'] + round($recargo_producto_unit, 3))?></td>
+		<?php } ?>
+    <td style="text-align:right"><?=money($r['iva'])?></td>
+    <td style="text-align:right"><?=money($total)?></td>
+   <!-- <td style="text-align:right"><?=money($r['cantidad'] * $r['precio'])?></td>-->
   </tr>
   <?php
 	}
 	?>
     </table>
-      <br>
- <?php
-  //  echo money($sub_total) ;
-	//echo money($iva);
-      //$iva  = redon($iva,2);	
- ?>
-<table border="0" align="center" cellpadding="6" cellspacing="0" class="bordear_tabla">
+    <br>
+		<table border="0" align="center" cellpadding="6" cellspacing="0" class="bordear_tabla">
       <tr>
         <th>Sub-Total</th>
         <td style="text-align:right"><?=money(round($sub_total,2))?></td>
       </tr>
-      <tr style="display:none">
-        <th>Descuento</th>
-        <td style="text-align:right"><?=money($descuento)?></td>
+			<!--<?php if($fInfo['recargo_id'] != null){ ?>
+      <tr>
+        <th><?=($fInfo['recargo_porcentaje'] > 0) ? 'Recargo' : 'Descuento'?></th>
+        <td style="text-align:right"><?=money($fInfo['recargo_importe'])?></td>
       </tr>
+			<?php } ?>-->
       <tr>
         <th>IVA</th>
         <td style="text-align:right"><?=money(round($iva,2))?></td>
@@ -209,83 +228,6 @@ titleset("Detalles de la Venta &quot;{$_GET[folio]}&quot;");
       </tr>
     </table>
 <?php
-$mostrar= array();
-$existentes=array();
-$verificador= 0;	
-foreach($ids_ as $k => $v)
-{
-	if(strlen($v) > 0)
-	{
-		$s4="SELECT cantidad FROM existencias WHERE id_almacen = {$almacenes} AND id_producto = {$v}";
-		$q4= mysql_query($s4);
-		$r4= mysql_fetch_assoc($q4);
-		$s3="SELECT *
-		FROM
-		minmax_productos	
-		WHERE minmax_productos.status =0 AND minmax_productos.almacen={$almacenes} AND minmax_productos.id_producto={$v}";
-		$q3=mysql_query($s3);
-		$r3= mysql_fetch_assoc($q3);
-			if(mysql_num_rows($q3)){
-				if($r4[cantidad] <= $r3[min])
-				{		
-					$verificador= 1;	
-					$existentes[]=$r4[cantidad];
-					$mostrar[]=$v; 	
-				}
-			}
-	}
-}
-
-
-	/**/
-
-if(!isset($_GET[v])){
-if($verificador == 1){?>
-<br/>
-<p style="color:red;"><b>Hay producto(s) que estan en el límite o menos.</b></p>
-<table border="0" align="center" cellpadding="4" cellspacing="0" class="bordear_tabla">
-<tr>
-<th style="text-align:center;">C&oacute;digo Barras</th>
-<th style="text-align:center;">Descripci&oacute;n</th>
-<th style="text-align:center;">Almac&eacute;n</th>
-<th style="text-align:center;">M&iacute;nimo</th>
-<th style="text-align:center;">M&aacute;ximo</th>
-<th style="text-align:center;">En existencia</th>
-</tr>
-<?php
-foreach($mostrar as $d => $c){
-	
-	$s5="SELECT
-			productos.descripcion producto,
-			productos.codigo_barras,
-			almacenes.descripcion almacen,
-			minmax_productos.min minimo,
-			minmax_productos.max maximo
-			FROM
-			minmax_productos
-			Inner Join productos ON minmax_productos.id_producto = productos.id_producto
-			Inner Join almacenes ON minmax_productos.almacen = almacenes.id_almacen	
-			WHERE minmax_productos.status =0 AND minmax_productos.almacen={$almacenes} AND minmax_productos.id_producto={$c}";
-			// echo $s;
-	$q5=mysql_query($s5);
-	$r5 = mysql_fetch_assoc($q5);
-	?>
-  <tr>
-<td><?=$r5[codigo_barras]?></td>
-<td><?=$r5[producto]?></td>
-<td><?=$r5[almacen]?></td>
-<td style="text-align:center;"><?=$r5[minimo]?></td>
-<td style="text-align:center;"><?=$r5[maximo]?></td>
-<td style="text-align:center;"><?=$existentes[$d]?></td>
-</tr>
-	<?php
-}
-?>
-</table>
-<?php
-}
-}
-
 // Evitar imprimir llamando desde AJAX
 if(isset($_GET[section]) && (Administrador() || ComprasVentas() || Ventas()))
 {

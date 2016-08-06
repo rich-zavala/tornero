@@ -9,7 +9,6 @@ switch($_SESSION[id_tipousuario]){
     $_permisos = array(
       "proveedores"
       );
-    //$_restric = array("cxc","contrarecibos", "gastos", "bancos","notas","almacenes","pedidos_formulario","productos_formulario","existencias_modificar","clientes_formulario","proveedor","trans");
   break;
   
   case "3": //C.C.C.

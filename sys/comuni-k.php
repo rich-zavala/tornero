@@ -59,8 +59,5 @@ if (isset($_GET[ok])) alerttogo("get", "ok", "Registro aprobado.");
 	?>
 	</span>
 	</div>
-	<div style="clear:both; text-align:center; font-size:10px; color:#999; margin-top: 40px;" id="footer">&copy; Comuni-K. Vizión Empresarial. Todos los derechos reservados 2009.</div>
-	<script type="text/javascript" language="javascript">
-	</script>
 	</body>
 </html>

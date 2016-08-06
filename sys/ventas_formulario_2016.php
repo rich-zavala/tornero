@@ -40,7 +40,9 @@ else //Editar
 	$s = "SELECT serie, anoap anoa,
 				noap noa, nocertificado ncsd,
 				id_cliente cliente, NumCtaPago,
-				metodoDePago, moneda, leyenda, fecha_factura
+				metodoDePago, moneda, leyenda, fecha_factura,
+				recargo_id, recargo_concepto, recargo_porcentaje, recargo_importe
+
 				FROM facturas WHERE folio = '{$_GET['folio']}' AND serie = '{$_GET['serie']}'";
 	$info = $db->fetchRow($s);
 	
@@ -128,11 +130,19 @@ $cotizacion = isset($_GET['cotizacion']);
 if($cotizacion)
 {
 	$s = sprintf($cg, "c.folio_cotizacion cotizacion,", "c.cantidad canti_,", "cotizaciones_productos_vista", "c.folio_cotizacion = '{$_GET['cotizacion']}'", "c.id_cotizacionproducto");
-	// echo $s;
 	$cotizacion_productos = $db->fetch($s);
 	$cotizacion = count($cotizacion_productos) > 0;
 }
 if(!$cotizacion) $cotizacion_productos = array();
+
+/* Cargar catálogo de recargos */
+$recargos_vacio = array( array(
+	'id' 					=> 0,
+	'etiqueta'		=> 'Ninguno',
+	'porcentaje'	=> '0'
+));
+$recargos_s = "SELECT id, etiqueta, porcentaje FROM recargos WHERE activo = 1 ORDER BY etiqueta";
+$recargos_catalogo = array_merge( $recargos_vacio, $db->fetch($recargos_s) );
 
 header("Content-type: text/html; charset=iso-8859-1");
 header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
@@ -174,6 +184,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 	var _nocertificado = '<?=$info['ncsd']?>';
 	var _facturista = '<?=$_SESSION['id_usuario']?>';
 	var _cotizacion = <?=json_encode(utf8ize($cotizacion_productos), JSON_NUMERIC_CHECK)?>;
+	var _recargos = <?=json_encode(utf8ize($recargos_catalogo), JSON_NUMERIC_CHECK)?>;
 	
 	//Info de edición
 	var _cliente = '<?=(isset($info['cliente'])) ? $info['cliente'] : ''?>';
@@ -183,6 +194,10 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 	var _leyenda = '<?=(isset($info['leyenda'])) ? $info['leyenda'] : ''?>';
 	var _fecha_factura = '<?=(isset($info['fecha_factura'])) ? $info['fecha_factura'] : ''?>';
 	var _productos = <?=json_encode(utf8ize($edicion_productos), JSON_NUMERIC_CHECK)?>;
+	var _recargo = '<?=(isset($info['recargo_id'])) ? $info['recargo_id'] : ''?>';
+	var _recargo_concepto = '<?=(isset($info['recargo_concepto'])) ? $info['recargo_concepto'] : ''?>';
+	var _recargo_porcentaje = '<?=(isset($info['recargo_porcentaje'])) ? $info['recargo_porcentaje'] : ''?>';
+	var _recargo_importe = '<?=(isset($info['recargo_importe'])) ? $info['recargo_importe'] : ''?>';
 	</script>
 </head>
 <body>
@@ -209,13 +224,12 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 							</ul>
 						</li>
 					</ul>
-				</div><!--/.nav-collapse -->
+				</div>
 			</div>
 		</nav>
 
 		<div class="container-fluid">
 			<div class="template">
-				<!--<pre>{{f}}</pre>-->
 				<form name="v" ng-submit="noSubmit($event)" ng-init="agregarProductos()" novalidate>
 					<div class="panel panel-default">
 						<table class="form-inline table venta-form-inicio">
@@ -295,9 +309,17 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 										<input type="text" class="form-control" id="id_cliente" name="id_cliente" typeahead="cliop.clave for cliop in clienteBuscar($viewValue)" typeahead-append-to-body="true" typeahead-template-url="../librerias/angular-templates/ventas-clientes.html" typeahead-select-on-blur="true" typeahead-on-select="clienteSet($item)" typeahead-editable="false" typeahead-select-on-exact="true" ng-blur="clienteConfirmar()" typeahead-loading="cliente.cargando" ng-class="{ clienteAjax: cliente.cargando }" ng-model="cliente.id" ng-required="f.factura.tipo == 'f'" autofocus autocomplete="off" ng-init="focusMe('id_cliente', '', true)">
 									</div>
 								</td>
-								<td colspan="5">
+								<td colspan="3">
 									<a href="comuni-k.php?section=clientes" class="btn btn-sm btn-default pull-right" tabindex="-1" target="_clientes"><i class="fa fa-w fa-list-alt"></i> Ir a clientes</a>
 									<div class="text-info cliente-info" role="button" data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" data-html="true" data-title="N&uacute;mero de cuenta:<br><b>{{cliente.info.NumCtaPago}}</b>" data-content="{{cliente.data}}" ng-if="cliente.id > 0">{{cliente.info.nombre}}</div>
+								</td>
+								<th><label for="recargo">Recargo</label></th>
+								<td>
+									<div class="form-group">
+										<select class="form-control" id="recargo" name="recargo" ng-model="f.recargo" 
+										ng-options="(recargo.porcentaje + '% - ' + recargo.etiqueta) for recargo in recargos track by recargo.id" required>
+										</select>
+									</div>
 								</td>
 							</tr>
 						</table>
@@ -310,7 +332,6 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 									<th><span title="Ingresar art&iacute;­culo manualmente" data-toggle="tooltip" data-placement="top"><i class="fa fa-w fa-i-cursor"></i> Tipo</span></th>
 									<th><i class="fa fa-w fa-barcode"></i> C&oacute;digo</th>
 									<th><i class="fa fa-w fa-cube"></i> Producto / Complemento</th>
-									<!--<th><i class="fa fa-w fa-object-ungroup"></i> Lote</th>-->
 									<th><span title="Disponibilidad en almac&eacute;n" data-toggle="tooltip" data-placement="top"><i class="fa fa-w fa-tasks"></i> Dis.</span></th>
 									<th><span title="Cantidad a retirar del inventario" data-toggle="tooltip" data-placement="top" class="text-warning"><i class="fa fa-w fa-shopping-cart"></i> Cant A.</span></th>
 									<th><span title="Cantidad a mostrar en factura" data-toggle="tooltip" data-placement="top" class="text-danger"><i class="fa fa-w fa-cart-plus"></i> Cant. F.</span></th>
@@ -371,35 +392,35 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 						</div>
 						<div class="col-sm-4">
 							<div class="panel panel-default">
-									<table class="table table-bordered table-condensed table-hover">
-										<tbody>
-											<tr>
-												<th width="40%" class="active nowrap">Sub-Total</th>
-												<td class="text-right">{{ (sumas.subtotal >= 0) ? (sumas.subtotal | currency) : '~' }}</td>
-											</tr>
-											<tr>
-												<th class="active">I.V.A.</th>
-												<td class="text-right">{{ (sumas.iva >= 0) ? (sumas.iva | currency) : '~' }}</td>
-											</tr>
-											<tr>
-												<th class="active">Total</th>
-												<td class="text-right">{{ (sumas.iva >= 0) ? (sumas.subtotal + sumas.iva | currency) : '~' }}</td>
-											</tr>
-										</tbody>
-									</table>
+								<table class="table table-bordered table-condensed table-hover">
+									<tbody>
+										<tr>
+											<th width="40%" class="active nowrap">Sub-Total</th>
+											<td class="text-right">{{ (sumas.subtotal >= 0) ? (sumas.subtotal | currency) : '~' }}</td>
+										</tr>
+										<tr ng-show="f.recargo.id > 0">
+											<th class="active">{{ f.recargo.porcentaje > 0 ? 'Recargo' : 'Descuento' }} ({{ f.recargo.porcentaje }}%)</th>
+											<td class="text-right">{{ (f.factura.recargo_importe != 0) ? (f.factura.recargo_importe | currency) : '~' }}</td>
+										</tr>
+										<tr>
+											<th class="active">I.V.A.</th>
+											<td class="text-right">{{ (sumas.iva >= 0) ? (sumas.iva | currency) : '~' }}</td>
+										</tr>
+										<tr>
+											<th class="active">Total</th>
+											<td class="text-right">{{ (sumas.iva >= 0) ? (sumas.subtotal + sumas.iva + f.factura.recargo_importe | currency) : '~' }}</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
 					
-					<!--{{v.$submitted}}x{{v.$invalid}}xx{{alerts}}-->
 					<div class="row" ng-show="v.$submitted">
 						<div class="col-sm-12">
 							<div class="alert alert-danger" ng-if="alerts.productos"><i class="fa fa-w fa-warning"></i> No hay productos definidos.</div>
 							<div class="alert alert-danger" ng-if="alerts.existencias"><i class="fa fa-w fa-warning"></i> Existen inconsistencias en las cantidades solicitadas.</div>
 							<div class="alert alert-danger" ng-if="alerts.cliente"><i class="fa fa-w fa-warning"></i> El cliente no ha sido definido.</div>
-							<!--<div class="alert alert-danger" ng-if="alerts.folioNoValido"><i class="fa fa-w fa-warning"></i> Especifique un folio v&aacute;lido.</div>-->
-							<!--<div class="alert alert-danger" ng-if="alerts.folioUtilizado"><i class="fa fa-w fa-warning"></i> El folio especificado ya se encuentra utilizado.</div>-->
-							<!--<div class="alert alert-danger" ng-if="alerts.duplicados"><i class="fa fa-w fa-warning"></i> Existen productos duplicados. Verifique la informaci&oacute;n.</div>-->
 							<div class="alert alert-danger" ng-if="v.$invalid && !alerts.cliente && !alerts.existencias"><i class="fa fa-w fa-warning"></i> Existe un error no identificado en el formulario. Envie la siguiente información a soporte técnico:<pre>{{errors}}</pre></div>
 							<div class="alert alert-danger" ng-if="alerts.error"><i class="fa fa-w fa-warning"></i> Ha ocurrido un error. Intente de nuevo m&aacute;s tarde.</div>
 							<div class="alert alert-info" ng-if="alerts.ongoing"><i class="fa fa-w fa-spin fa-spinner"></i> Registrando informaci&oacute;n...</div>
@@ -416,18 +437,14 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 					</div>
 				</form>
 				
-				<!--<pre>{{v}}</pre>-->
-				
 				<hr>
 				
 				<h5 class="negritas">Teclas r&aacute;pidas</h5>
 				<ul class="list-inline">
-					<!--<li><small><b>F1</b> - Buscar cliente</small></li>-->
 					<li><small><b>F5</b> - Reiniciar formulario</small></li>
 					<li><small><b>F8</b> - Agregar producto</small></li>
 					<li ng-if="!f.edicion"><small><b>F9</b> - Cambiar tipo de venta</small></li>
 					<li><small><b>F10</b> - Registrar venta</small></li>
-					<!--<li><small><b>F3</b> - Buscar producto</small></li>-->
 				</ul>
 				
 			</div>

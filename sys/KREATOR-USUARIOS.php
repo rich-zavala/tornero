@@ -41,6 +41,9 @@ $facturar=array("comuni-k.php?section=facturar","Facturar varias Notas","factura
 $cotizar=array("comuni-k.php?section=cotizaciones","Cotizaciones","cotizaciones",0);
 $retiros=array("comuni-k.php?section=retiros","Retiros de LACATOSA","retiros",0);
 
+//Agosto 2016
+$recargos=array("comuni-k.php?section=recargos","Recargos","recargos",0);
+
 $panel=array("comuni-k.php?section=panel_control","Inicio","panel",0);
 
 switch($_SESSION['id_tipousuario']){
@@ -67,7 +70,8 @@ switch($_SESSION['id_tipousuario']){
       $reportes,
       $clientes,
       $proveedores,
-			$retiros
+			$retiros,
+			$recargos
     );
   break;
   case "2": //Proveedores

@@ -1,3 +1,4 @@
+.w100{ width: 98.5%; }
 .text-center{ text-align: center }
 .centrado{ margin: auto; }
 .correo {
@@ -34,29 +35,29 @@ input[type=radio] {
 .bordear_tabla tr:hover{
 	background-color: #F8E8A0 !important;
 }
-
+.kreator_element, .kreator_small{
+	transition: all .3s;
+	text-align: center;
+  display: inline-table !important;
+}
 .kreator_element{
 	width:120px;
 	height: 140px;
-	text-align:center;
-  display: inline-block;
-	cursor: pointer;
-  margin: 4px 10px;
+  padding: 4px 10px;
+  margin-bottom: 10px;
 }
 .kreator_small{
 	width:130px;
 	height:62px;
-	display: inline-block;
-	margin:5px;
-	padding:4px;
+	padding:10px;
 	line-height:14px;
 	overflow: hidden;
-	cursor: pointer;
 }
 .kreator_element:hover, .kreator_small:hover{	
 	background-color: #33ADFF;
 	border-radius: 6px;
-}
-.kreator_element:hover a, .kreator_small:hover a{
 	color: white;
+}
+.kreator_small img {
+  margin-bottom: 4px;
 }

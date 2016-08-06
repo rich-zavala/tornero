@@ -1,3 +1,4 @@
+<?php error_reporting(0); ?>
 <html>
 <head>
 <script type="text/javascript" language="javascript">
@@ -100,7 +101,8 @@ switch($_GET['section']){
 				$_GET['section'] == "reporte_cobros" ||
 				$_GET['section'] == "reporte_ventas_totales" ||
 				$_GET['section'] == "cotizaciones_formulario" ||
-				$_GET['section'] == "retiros_detalle"
+				$_GET['section'] == "retiros_detalle" ||
+				$_GET['section'] == "recargos_formulario"
 				):
 	$o = array(
 						 array($_SESSION['start'],"Regresar","bak",0),
@@ -163,11 +165,11 @@ foreach($o AS $s){
   	$c = ceil((count($o)+1)/5);
   	if($c == 1)
 		{
-  		$n = 180;
+  		$n = 200;
   	}
 		else 
 		{
-  		$n = 180 + (66 * ($c-1));
+  		$n = 200 + (66 * ($c-1));
   	}
   }
 	else

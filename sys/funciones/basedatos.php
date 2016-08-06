@@ -13,8 +13,8 @@ Se encuentra incluido en cada script del sistema
 error_reporting( error_reporting() & ~E_NOTICE );
 
 //Inicializador de constantes
-define('PATH', 'http://localhost/Tornero2016/htdocs/tornero/'); //Ruta de acceso al sistema
-define('DIR', 'C:/xampp/htdocs/tornero/'); //Ruta de raíz absoluta del sistema
+define('PATH', 'http://localhost/tornero/sys/'); //Ruta de acceso al sistema
+define('DIR', 'C:/xampp/htdocs/tornero/sys/'); //Ruta de raíz absoluta del sistema
 
 //Variables de configuracion de base de datos
 define('DB_NAME', 'tornero_2016');
@@ -38,7 +38,7 @@ function Conectar(){
 	
 	//Establecer objeto dbFacile
 	//Include para comuni-k y para advans
-	foreach(array('funciones/dbFacile.php', '../tornero/funciones/dbFacile.php', 'dbFacile.php') as $file) if(file_exists($file) && !class_exists('dbFacile_mssql')) include($file);
+	foreach(array('funciones/dbFacile.php', '../sys/funciones/dbFacile.php', 'dbFacile.php') as $file) if(file_exists($file) && !class_exists('dbFacile_mssql')) include($file);
 	
 	global $db;
 	// $db = dbFacile::open('mysql', DB_NAME, DB_USER, DB_PASSWORD, DB_HOST);

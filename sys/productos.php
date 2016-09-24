@@ -1,20 +1,20 @@
 <?php
-if (isset($_GET[cambiar_estado])) { //Cambiar el estado del Usuario
+if (isset($_GET['cambiar_estado'])) { //Cambiar el estado del Usuario
     include ("funciones/basedatos.php");
     include ("funciones/funciones.php");
-    mysql_query("UPDATE productos SET status = {$_GET[cambiar_estado]} WHERE id_producto = {$_GET[producto]}") or die(mysql_error());
+    mysql_query("UPDATE productos SET status = {$_GET['cambiar_estado']} WHERE id_producto = {$_GET['producto']}") or die(mysql_error());
     exit();
 }
-if (isset($_GET[eliminar_producto])) {
+if (isset($_GET['eliminar_producto'])) {
     include ("funciones/basedatos.php");
     include ("funciones/funciones.php");
-    $strSQL = "UPDATE productos SET status = 2 WHERE id_producto = " . $_GET[eliminar_producto];
+    $strSQL = "UPDATE productos SET status = 2 WHERE id_producto = " . $_GET['eliminar_producto'];
     mysql_query($strSQL) or die(mysql_error());
     exit();
 }
 // Aplico el filtro en caso de ser necesario
-if (isset($_GET[filtro_data]) && $_GET[filtro_data] != "") {
-    $where.= " AND (descripcion LIKE '%" . $_GET[filtro_data] . "%' OR codigo_barras LIKE '%" . $_GET[filtro_data] . "%')";
+if (isset($_GET['filtro_data']) && $_GET['filtro_data'] != "") {
+    $where.= " AND (descripcion LIKE '%" . $_GET['filtro_data'] . "%' OR codigo_barras LIKE '%" . $_GET['filtro_data'] . "%')";
 }
 if (!isset($_GET[order])) {
     $_GET[order] = "descripcion";
@@ -176,6 +176,7 @@ $(document).ready(function() {
     } ?>
     <th>C&oacute;digo de barras</th>
     <th>Descripci&oacute;n</th>
+    <th>Unidad</th>
     <th>Precio</th>
     <th>IVA</th>
     <th>Status</th>
@@ -199,6 +200,7 @@ $(document).ready(function() {
         } ?>
     <td nowrap><?php editNow("productos", "id_producto", "codigo_barras", $r[id_producto], "codigo", $r[codigo_barras], -1, 2, "90px"); ?></td>
     <td nowrap><b><?php editNow("productos", "id_producto", "descripcion", $r[id_producto], "descripcion", $r[descripcion], -1, 2, "100%"); ?></b></td>
+    <td><?=$r['unidad']?></td>
     <td style="white-space:nowrap; text-align:right"><?php editNow("productos", "id_producto", "precio_publico", $r[id_producto], "precio", $r[precio_publico], 3, 1, "50px"); ?></td>
     <td style="white-space:nowrap; text-align:right"><?php editNow("productos", "id_producto", "iva", $r[id_producto], "iva", $r[iva], 2, 1, "40px"); ?>%</td>
     <td width="10" nowrap>

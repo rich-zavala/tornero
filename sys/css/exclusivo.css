@@ -1,10 +1,11 @@
 .w100{ width: 98.5%; }
-.text-center{ text-align: center }
+.text-center{ text-align: center !important }
 .centrado{ margin: auto; }
 .correo {
 	font-size:12px;
 	color: #006699;
 }
+.margin-top10{ margin-top: 10px; }
 
 input.disable, select.disable, input.disable_1 {
 	border: 1px solid #7f9db9;
@@ -51,7 +52,7 @@ input[type=radio] {
 	height:62px;
 	padding:10px;
 	line-height:14px;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 .kreator_element:hover, .kreator_small:hover{	
 	background-color: #33ADFF;

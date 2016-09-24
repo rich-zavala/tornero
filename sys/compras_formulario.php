@@ -303,6 +303,15 @@ function AgregarFila(){
   cantidad.onblur = function(){numero(this,3); sumar_tr(num); sumar();}
   celda.appendChild(cantidad);
   row.appendChild(celda);
+
+  //Unidad
+  celda = document.createElement("td");
+  celda.align = "center";
+  unidad = document.createElement("span");
+	unidad.id = 'unidad' + num;
+	unidad.innerHTML = '-';
+  celda.appendChild(unidad);
+  row.appendChild(celda);
 	
   //Costo U.
   celda = document.createElement("td");
@@ -461,8 +470,9 @@ function buscar_datos(obj,num,tipo){
         barras.value = codigo_barras;
         control.value = codigo_barras;
       }
-      for(i=0; descripciones.length>i; i++){
-				descripcion.options[i] = new Option(descripciones[i],ajax_id_producto);
+      for(i = 0; descripciones.length > i; i++){
+				descripcion.options[i] = new Option(descripciones[i], ajax_id_producto);
+				descripcion.onchange();
 			}
       lote.readOnly = false;
       cantidad.readOnly = false;
@@ -508,8 +518,14 @@ function buscar_datos(obj,num,tipo){
 	}
 }
 
-function actualizar_campos(obj,num){
-	document.getElementById("id_producto"+num).value = obj.options[obj.selectedIndex].value.split("~")[obj.selectedIndex];
+function actualizar_campos(obj, num){
+	var idProducto = obj.options[obj.selectedIndex].value.split("~")[obj.selectedIndex];
+	document.getElementById("id_producto" + num).value = idProducto;
+	
+	/* 12 agosto 2016 > Mostrar unidad */
+	var url = "ajax_tools.php?ajax_producto=" + idProducto + "&field=unidad&ident=id_producto";
+	var r = procesar(url);
+	$('#unidad' + num).html(r);
 }
 
 function sumar_tr(num){
@@ -779,6 +795,7 @@ if(mysql_num_rows($pp)>0){
       <th>Descripci&oacute;n</th>
       <th>Lote</th>
       <th>Cantidad</th>
+      <th>Unidad</th>
       <th>Costo U.</th>
       <th>% IVA</th>
       <th>Sub-Importe</th>

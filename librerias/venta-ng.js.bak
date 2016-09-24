@@ -26,7 +26,7 @@ app.controller('ventaFormulario', ['$scope', '$rootScope', '$http', '$filter', '
 			licitacion: '_normal_',
 			leyenda: null,
 			NumCtaPago: null,
-			metodoDePago: '01',
+			metodoDePago: 'EFECTIVO',
 			pago: 'Crédito',
 			moneda: 'M.N.',
 			anoap: _anoap,

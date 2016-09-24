@@ -133,6 +133,10 @@ if(strlen($folio) > 0 and (int)$folio > 0 and strlen($serie) > 0 and $r['error']
 		$r['xml'] = str_replace("&#10;","\n", $xml);
 		$xml = CONECTOR . 'pendientes/' .  $advansFile. '.xml';
 		
+		//25 ago 2016 - Cliente con RFC especial
+		$r['xml'] = str_replace("AP&amp;AMP;000225V19","AP&000225V19", $r['xml']);
+		$r['xml'] = str_replace("ARRENDADORA P&amp;AMP;C SA DE CV","ARRENDADORA P&C SA DE CV", $r['xml']);
+		
 		//Escribir archivo
 		file_put_contents($xml, $r['xml']);
 	}

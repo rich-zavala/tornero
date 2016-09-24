@@ -1,3 +1,11 @@
+/*
+IMPORTANTE
+Actualizar librerias/angular-templates
+
+
+*/
+
+
 ALTER TABLE `facturas`
 ADD COLUMN `recargo_id`  int NULL AFTER `leyenda`,
 ADD COLUMN `recargo_valor`  decimal(5,2) NOT NULL AFTER `recargo_id`;
@@ -50,5 +58,37 @@ BEGIN
 	END IF;
 	
 	#CALL facturaSaldo(_folio, _serie);
+END;
+
+ALTER TABLE `productos_solido`
+ADD COLUMN `unidad`  varchar(255) NULL DEFAULT "PZA" AFTER `precio_publico`,
+ADD INDEX `unidad` (`unidad`);
+
+ALTER TABLE `productos`
+ADD COLUMN `unidad`  varchar(255) NULL DEFAULT "PZA" AFTER `precio_publico`,
+ADD INDEX `unidad` (`unidad`);
+
+CREATE TRIGGER `instrim` BEFORE INSERT ON `productos_solido`
+FOR EACH ROW BEGIN
+SET NEW.descripcion = TRIM(CHAR(9) FROM TRIM(NEW.descripcion));
+SET NEW.codigo_barras = TRIM(CHAR(9) FROM TRIM(NEW.codigo_barras));
+END;
+
+CREATE TRIGGER `updtrim` BEFORE UPDATE ON `productos_solido`
+FOR EACH ROW BEGIN
+SET NEW.descripcion = TRIM(CHAR(9) FROM TRIM(NEW.descripcion));
+SET NEW.codigo_barras = TRIM(CHAR(9) FROM TRIM(NEW.codigo_barras));
+END;
+
+CREATE TRIGGER `instrimmem` BEFORE INSERT ON `productos`
+FOR EACH ROW BEGIN
+SET NEW.descripcion = TRIM(CHAR(9) FROM TRIM(NEW.descripcion));
+SET NEW.codigo_barras = TRIM(CHAR(9) FROM TRIM(NEW.codigo_barras));
+END;
+
+CREATE TRIGGER `updtrimmem` BEFORE UPDATE ON `productos`
+FOR EACH ROW BEGIN
+SET NEW.descripcion = TRIM(NEW.descripcion);
+SET NEW.codigo_barras = TRIM(NEW.codigo_barras);
 END;
 

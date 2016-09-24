@@ -14,7 +14,7 @@ $f = factura_data($_GET[folio],$_GET[serie]);
 foreach($f[empresa] as $k => $v) $f[empresa][$k] = strtoupper(utf8_encode($v));
 foreach($f[cliente] as $k => $v) $f[cliente][$k] = strtoupper(utf8_encode($v));
 foreach($f[productos] as $kp => $producto) foreach($producto as $k => $v) $f[productos][$kp][$k] = strtoupper(utf8_encode(htmlspecialchars_decode($v)));
-// p($f);
+
 $xml = new SimpleXMLElement('<Comprobante/>');
 $xml->addAttribute('xmlns', 'http://www.sat.gob.mx/cfd/2');
 $xml->addAttribute('xmlns__DOSPUNTOS__xsi', 'http://www.w3.org/2001/XMLSchema-instance');

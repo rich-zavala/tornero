@@ -70,7 +70,7 @@ titleset("Detalles de la Venta &quot;{$_GET[folio]}&quot;");
 			<?php if($tipo == "f"){ ?>
       <tr>
         <th>M&eacute;todo de pago</th>
-        <td>
+        <td colspan="3">
 			<?php
 			if(is_numeric($r['metodoDePago']))
 			{

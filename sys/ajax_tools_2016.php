@@ -1,4 +1,7 @@
 <?php
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 header('Content-Type: application/json');
 include("funciones/basedatos.php");
 include("funciones/funciones.php");
@@ -20,7 +23,7 @@ if(isset($_GET['producto']))
 	*/
 	if(!isset($_GET['almacen'])) $_GET['almacen'] = 1;
 	
-	$s_productos = "SELECT p.id_producto, codigo_barras codigo, descripcion, precio_publico precio, iva,
+	$s_productos = "SELECT p.id_producto, codigo_barras codigo, descripcion, unidad, precio_publico precio, iva,
 									IF( cantidad IS NULL,
 										'[{ \"lote\": 1, \"cantidad\": 0 }]',
 										GROUP_CONCAT(CONCAT('[{ \"lote\": ', '\"', lote,'\", \"cantidad\": ', cantidad, '}]'))

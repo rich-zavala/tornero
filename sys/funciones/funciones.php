@@ -1,4 +1,18 @@
 <?php
+/*
+23 Sep
+Garantizar que la sesión pertenece al sistema.
+Si hay sesión en tornero y por URL se accede a HC o viceversa reiniciar la sesión.
+*/
+try {
+	// p($_SESSION);
+  if(isset($_SESSION['entorno']) and substr_count(__FILE__, $_SESSION['entorno']) == 0)
+	{
+		echo '<meta http-equiv="Refresh" content="0;index.php">';
+		exit;
+	}
+} catch (Exception $e) {}
+
 // Esta función regresa el valor en días de dos fechas dadas
 // Si diferencia > 0 entonces Fecha1 > Fecha2   Faltan N días para llegar a la Fecha2
 // Si diferencia < 0 entonces Fecha1 < Fecha2   Ya pasaron N días después de la Fecha2
@@ -420,10 +434,10 @@ if(isset($_POST['edit_now_data']))
 {
 	@session_start();
 	$r = array( 'error' => false );
-	if(strlen($_SESSION['id_usuario'])>0)
+	if(strlen($_SESSION[id_usuario])>0)
 	{
 		include("basedatos.php");
-		$s = "UPDATE {$_POST[tabla]} SET {$_POST['campo']} = '{$_POST['nuevo']}' WHERE {$_POST['id_tabla']} = '{$_POST['este_id']}'";
+		$s = "UPDATE {$_POST[tabla]} SET {$_POST[campo]} = '{$_POST[nuevo]}' WHERE {$_POST[id_tabla]} = '{$_POST[este_id]}'";
 		mysql_query($s) or die ($s."\n".mysql_error());
 		
 		if($_POST['tabla'] == 'clientes') mysql_query("CALL clientes2Memory()");
@@ -559,14 +573,10 @@ function mandar_mail($remitente,$desti,$titulo,$ruta,$ruta2,$mensaje)
 				$mail -> Username = $r[smtp_usuario];
 				$mail -> Password = $r[smtp_pass];
 				$mail -> AddAddress($desti[0]);
-				foreach($ruta as $r)
-				{
-					$mail -> AddAttachment($r,$r,"base64",$r);
-				}
-				foreach($ruta2 as $r2)
-				{
-					$mail -> AddAttachment($r2,$r2,"base64",$r2);
-				}
+				foreach($ruta as $r) if(strlen($r) > 0) $mail -> AddAttachment($r,$r,"base64",$r);
+				foreach($ruta2 as $r2) if(strlen($r2) > 0) $mail -> AddAttachment($r2,$r2,"base64",$r2);
+					
+				
 				for($i = 1; $i < count($desti); $i++)
 				{
 					$mail -> AddBCC($desti[$i]);
@@ -630,24 +640,24 @@ function reporte_mensual_data($f1,$f2)
 			 foreach($d[chris] as $v)
 			 {				   
 					$pro_s="SELECT  
-					facturas_productos.cantidad,
-					facturas_productos.canti_,
-					facturas_productos.lote,
-					facturas_productos.precio,
-					facturas_productos.descuento,
-					facturas_productos.iva,
-					facturas_productos.unidad,
-					facturas_productos.importe,
-					productos.codigo_barras,
+					f.cantidad,
+					f.canti_,
+					f.lote,
+					f.precio,
+					f.descuento,
+					f.iva,
+					f.unidad_factura,
+					f.importe,
+					p.codigo_barras,
 					IF(
-						 facturas_productos.id_producto = 0,
-						 especial,
-						 productos.descripcion
-						 ) descripcion,
-					IFNULL(facturas_productos.complemento,NULL) 'complemento'
+						f.id_producto = 0,
+						especial,
+						p.descripcion
+					) descripcion,
+					IFNULL(f.complemento,NULL) 'complemento'
 					FROM
-					facturas_productos
-					LEFT JOIN productos ON facturas_productos.id_producto = productos.id_producto
+					facturas_productos f
+					LEFT JOIN productos p ON f.id_producto = p.id_producto
 					WHERE folio_factura = '{$v[folio]}' AND serie='{$fila[serie]}'";
 	    $pro_q = query($pro_s);	
 			$iva=0;		
@@ -733,8 +743,15 @@ function factura_data($f,$ser)
 	//La cadena original será un arreglo que será imploded posteriormente
 	$co = array("||2.2", $f );
 	$var_s = "SELECT nombre, calle, noe, noi, colonia, localidad, municipio, estado, pais_nombre pais, cp, rfc, logotipo, ncsd, ruta, cedula, dolar FROM vars INNER JOIN paises ON paises.id = vars.pais";
-	$data['empresa'] = mysql_fetch_assoc(query($var_s));
-	$serie = ($ser == "") ? " AND serie IS NULL" : " AND serie='{$ser}'";
+	$data[empresa] = mysql_fetch_assoc(query($var_s));
+	if($ser == "")
+	{
+		$serie= " AND serie IS NULL";
+	}
+	else
+	{
+		$serie= " AND serie='{$ser}'";
+	}
 	 
 	$fac_s = "SELECT
 						DATE_FORMAT(fecha_captura, '%Y-%m-%d') fecha,
@@ -748,63 +765,53 @@ function factura_data($f,$ser)
 						moneda,
 						importe,
 						NumCtaPago,
-						metodoDePago,
-						recargo_concepto,
-						recargo_porcentaje,
-						recargo_importe
+						metodoDePago
 						FROM
 						facturas
 						WHERE folio = '{$f}' {$serie}";
 	$cliente = mysql_fetch_assoc(query($fac_s));
-	$cliente_data = explode("|",$cliente['datos_cliente']);
+	$cliente_data = explode("|",$cliente[datos_cliente]);
 	
-	$co[] = $cliente['fecha_sat'];
-	$co[] = $cliente['noap'];
-	$co[] = $cliente['anoap'];
+	$co[] = $cliente[fecha_sat];
+	$co[] = $cliente[noap];
+	$co[] = $cliente[anoap];
 	$co[] = "ingreso";
 	$co[] = "PAGO EN UNA SOLA EXHIBICION";
 	
-	$data['factura']['fecha'] = $cliente['fecha'];
-	$data['factura']['hora'] = $cliente['hora'];
-	$data['factura']['fecha_sat'] = $cliente['fecha_sat'];
-	$data['factura']['importe'] = $cliente['importe'];
-  $data['factura']['leyenda'] = $cliente['leyenda'];
-  $data['factura']['moneda'] =($cliente['moneda'] == 'M.N.') ? 'MXN' : 'USD';
-  $data['empresa']['dolar'] = ($cliente['moneda'] == 'M.N.') ? '1' : $data['empresa']['dolar'];
-	$data['empresa']['ruta'] = $data['empresa']['ruta'];
-	$data['factura']['nocertificado'] =  $cliente['nocertificado'];
-	$data['factura']['anoaprobacion'] =  $cliente['anoap'];
-	$data['factura']['noaprobacion'] =  $cliente['noap'];
-	$data['factura']['recargo_concepto'] =  $cliente['recargo_concepto'];
-	$data['factura']['recargo_porcentaje'] =  $cliente['recargo_porcentaje'];
-	$data['factura']['recargo_importe'] =  $cliente['recargo_importe'];
+	$data[factura][fecha] = $cliente[fecha];
+	$data[factura][hora] = $cliente[hora];
+	$data[factura][fecha_sat] = $cliente[fecha_sat];
+	$data[factura][importe] = $cliente[importe];
+  $data[factura][leyenda] = $cliente[leyenda];
+  $data[factura][moneda] =($cliente[moneda] == 'M.N.') ? 'MXN' : 'USD';
+  $data[empresa][dolar] = ($cliente[moneda] == 'M.N.') ? '1' : $data[empresa][dolar];
+	$data[empresa][ruta] = $data[empresa][ruta];
+	$data[factura][nocertificado] =  $cliente[nocertificado];
+	$data[factura][anoaprobacion] =  $cliente[anoap];
+	$data[factura][noaprobacion] =  $cliente[noap];	
 	
-	$data['cliente']['rfc'] = $cliente_data['0'];
-	$data['cliente']['nombre'] = $cliente_data['1'];
-	$data['cliente']['calle'] = $cliente_data['2'];
-	$data['cliente']['noe'] = $cliente_data['3'];
-	$data['cliente']['noi'] = $cliente_data['4'];
-	$data['cliente']['colonia'] = $cliente_data['5'];
-	$data['cliente']['localidad'] = $cliente_data['6'];
-	$data['cliente']['municipio'] = $cliente_data['7'];
-	$data['cliente']['estado'] = $cliente_data['8'];
-	$data['cliente']['pais'] = $cliente_data['9'];
-	$data['cliente']['cp'] = $cliente_data['10'];
-	$data['cliente']['metodoDePago'] = $cliente['metodoDePago'];
-	$data['cliente']['NumCtaPago'] = $cliente['NumCtaPago'];
+	$data[cliente][rfc] = $cliente_data[0];
+	$data[cliente][nombre] = $cliente_data[1];
+	$data[cliente][calle] = $cliente_data[2];
+	$data[cliente][noe] = $cliente_data[3];
+	$data[cliente][noi] = $cliente_data[4];
+	$data[cliente][colonia] = $cliente_data[5];
+	$data[cliente][localidad] = $cliente_data[6];
+	$data[cliente][municipio] = $cliente_data[7];
+	$data[cliente][estado] = $cliente_data[8];
+	$data[cliente][pais] = $cliente_data[9];
+	$data[cliente][cp] = $cliente_data[10];
+	$data[cliente][metodoDePago] = $cliente[metodoDePago];
+	$data[cliente][NumCtaPago] = $cliente[NumCtaPago];
 
 	$pro_s = "SELECT
 						IF(canti_ = 0, cantidad, canti_) cantidad,
-						IF(canti_ = 0, precio, (canti_ * precio) / canti_)
-						+
-						(precio * " . ($data['factura']['recargo_porcentaje'] / 100) . ")
-						
-						precio,
+						IF(canti_ = 0, precio, (canti_ * precio) / canti_) precio,
 						
 						f.lote,
 						f.descuento,
 						f.iva,
-						IF(TRIM(unidad) = '', 'NO DEFINIDO', unidad) unidad,
+						IF(TRIM(f.unidad_factura) = '', 'NO DEFINIDO', f.unidad_factura) unidad,
 						f.importe,
 						p.codigo_barras,
 						
@@ -815,33 +822,32 @@ function factura_data($f,$ser)
 						LEFT JOIN productos p ON f.id_producto = p.id_producto
 						WHERE folio_factura = '{$f}' {$serie}
 						GROUP BY f.id_facturaproducto";
-						// echo $pro_s;
 	$pro_q = query($pro_s);
 	$productos = array();
 	while($pro = mysql_fetch_assoc($pro_q))
 	{
 		
-		$data['factura']['subtotal'] += $pro['cantidad']*$pro['precio'];
-		$data['factura']['iva'] += $pro['cantidad']*($pro['precio']*($pro['iva']/100));
-		$data['factura']['descuento'] += $pro['cantidad']*($pro['precio']*($pro['descuento']/100));
+		$data[factura][subtotal] += $pro[cantidad]*$pro[precio];
+		$data[factura][iva] += $pro[cantidad]*($pro[precio]*($pro[iva]/100));
+		$data[factura][descuento] += $pro[cantidad]*($pro[precio]*($pro[descuento]/100));
 	
-		$descripcion = $pro['descripcion'];
-		$data['productos'][] = array(
-														'cantidad' => $pro['cantidad'],
-														'unidad' => $pro['unidad'],
-														'descripcion' => $pro['descripcion'],
-														'precio' => round($pro['precio'], 3),
-														'importe' => round($pro['cantidad'] * $pro['precio'], 3)
-													);
+		$descripcion = $pro[descripcion];
+		$data[productos][] = array(
+													'cantidad' => $pro[cantidad],
+													'unidad' => $pro[unidad],
+													'descripcion' => $pro[descripcion],
+													'precio' => nu($pro[precio]),
+													'importe' => nu($pro[cantidad]*$pro[precio])
+												 );
 
-		$productos[] = $pro['cantidad'];
-		$productos[] = $pro['unidad'];
-		$productos[] = $pro['descripcion'];
-		$productos[] = round($pro['precio'], 3);
-		$productos[] = round($pro['cantidad'] * $pro['precio'], 2);
+		$productos[] = $pro[cantidad];
+		$productos[] = $pro[unidad];
+		$productos[] = $pro[descripcion];
+		$productos[] = nu($pro[precio]);
+		$productos[] = nu($pro[cantidad]*$pro[precio]);
 	}
 
-	$data['factura']['tipodecomprobante'] = "ingreso";
+	$data[factura][tipodecomprobante] = "ingreso";
 
 	//Obtener las letras del importe. Cuando llama desde Advans no encuentra la ruta. Evitamos el error...
 	$numLet = "funciones/CNumeroaLetra.php";
@@ -849,11 +855,11 @@ function factura_data($f,$ser)
 	{
 		include($numLet);
 		$numalet = new CNumeroaletra;
-		$numalet -> setNumero($data['factura']['importe']);
+		$numalet -> setNumero($data[factura][importe]);
 		$numalet -> setMayusculas(0);
 		$numalet -> setGenero(0);
 		
-		if($data['factura']['moneda'] == "MXN")
+		if($data[factura][moneda] == "MXN")
 		{
 			$numalet -> setMoneda("PESOS");
 			$numalet -> setPrefijo("");
@@ -866,10 +872,10 @@ function factura_data($f,$ser)
 			$numalet -> setSufijo("U.S.D.");
 		}
 
-		$data['factura']['letras'] = "SON: ".strtoupper($numalet->letra());
+		$data[factura][letras] = "SON: ".strtoupper($numalet->letra());
 	}
-	$data['cadenaoriginal'] = '__CADENAORIGINAL__';
-	$data['sello'] = '__SELLO__';
+	$data[cadenaoriginal] = '__CADENAORIGINAL__';
+	$data[sello] = '__SELLO__';
 	
 	$data = array_resume($data);
 	// p($data);
@@ -1054,5 +1060,28 @@ function utf8ize($d) {
 function json_encode_utf8($array)
 {
 	return json_encode(utf8ize($array));
+}
+
+//Regresar colección de unidades
+function unidades()
+{
+	return array(
+		'CMS',
+		'GRS',
+		'JGO',
+		'KG',
+		'LT',
+		'MT',
+		'PZA',
+		'Pulgada',
+		'SERV'
+	);
+}
+
+/* 3 Oct 2016 - Obtener valor de USD */
+function getUSD()
+{
+	global $db;
+	return $db->fetchCell("SELECT dolar FROM vars");
 }
 ?>

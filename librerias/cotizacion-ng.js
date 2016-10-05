@@ -5,6 +5,7 @@ app.controller('cotizacionFormulario', ['$scope', '$rootScope', '$http', '$filte
 	//Herramientas
 	$scope.moment = moment;
 	$scope.setPops = setPops;
+	$scope.unidades = _unidades;
 	
 	//Información inicial de factura
 	$scope.f = {
@@ -169,6 +170,7 @@ app.controller('cotizacionFormulario', ['$scope', '$rootScope', '$http', '$filte
 			producto.factura.id_producto = item.id_producto;
 			producto.factura.precio = item.precio;
 			producto.factura.iva = item.iva;
+			producto.factura.unidad = item.unidad;
 			producto.form.descripcion = item.descripcion;
 			
 			//Focus a siguiente elemento;

@@ -1,6 +1,6 @@
 <?php
-include("../sys/funciones/basedatos.php");
-include("../sys/funciones/funciones.php");
+@include("../tornero/funciones/basedatos.php");
+@include("../tornero/funciones/funciones.php");
 error_reporting(E_ERROR | E_PARSE);
 
 //Conectar a la base de datos solicitada
@@ -14,6 +14,10 @@ $f = factura_data($_GET[folio],$_GET[serie]);
 foreach($f[empresa] as $k => $v) $f[empresa][$k] = strtoupper(utf8_encode($v));
 foreach($f[cliente] as $k => $v) $f[cliente][$k] = strtoupper(utf8_encode($v));
 foreach($f[productos] as $kp => $producto) foreach($producto as $k => $v) $f[productos][$kp][$k] = strtoupper(utf8_encode(htmlspecialchars_decode($v)));
+
+//27 Sep - Cuando el método de pago sea 98 poner "NA".
+if($f['cliente']['metodoDePago'] == '98')
+	$f['cliente']['metodoDePago'] = 'NA';
 
 $xml = new SimpleXMLElement('<Comprobante/>');
 $xml->addAttribute('xmlns', 'http://www.sat.gob.mx/cfd/2');

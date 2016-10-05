@@ -61,31 +61,34 @@ titleset("Detalles de la Cotizaci&oacute;n \\\"{$_GET[folio]}\\\"");
         <td><?=$r[vendedor]?></td>
       </tr>
     </table>
-    <br />
-    <table border="0" align="center" cellpadding="5" cellspacing="0" class="bordear_tabla lista">
-      <tr>
+    
+		<br />
+		
+    <table border="1" align="center" cellpadding="5" cellspacing="0" style="border-collapse:collapse;">
+      <tr bgcolor="#BF2D2D" style="color: white">
         <th>C&oacute;digo Barras</th>
         <th>Descripci&oacute;n</th>
+        <th>Unidad</th>
         <th>Cantidad</th>
         <th>Precio</th>
         <th>% IVA</th>
         <th>Importe</th>
       </tr>
   <?php
-	$i=0;
 	$s = "SELECT
-		cotizaciones_productos.cantidad,
-		cotizaciones_productos.precio,
-		cotizaciones_productos.iva,
-		cotizaciones_productos.importe,
-		IF(especial='0',productos.codigo_barras,'-') 'codigo_barras',
-		IFNULL(productos.descripcion,cotizaciones_productos.especial) 'descripcion',
-		IFNULL(cotizaciones_productos.complemento,NULL) 'complemento'
+		c.cantidad,
+		c.unidad,
+		c.precio,
+		c.iva,
+		c.importe,
+		IF(especial='0',p.codigo_barras,'-') 'codigo_barras',
+		IFNULL(p.descripcion,c.especial) 'descripcion',
+		IFNULL(c.complemento,NULL) 'complemento'
 		FROM
-		cotizaciones_productos
-		LEFT JOIN productos ON cotizaciones_productos.id_producto = productos.id_producto
+		cotizaciones_productos c
+		LEFT JOIN productos p ON c.id_producto = p.id_producto
 		WHERE folio_cotizacion = '{$_GET[folio]}'
-		GROUP BY cotizaciones_productos.id_cotizacionproducto";
+		GROUP BY c.id_cotizacionproducto";
 	$q = mysql_query($s) or die (mysql_error());
 	while($r = mysql_fetch_assoc($q)){
 	if($i%2 == 0) $class = "tr_list_0"; else $class = "tr_list_1";
@@ -107,6 +110,7 @@ titleset("Detalles de la Cotizaci&oacute;n \\\"{$_GET[folio]}\\\"");
 			}
 		?>
     </td>
+    <td style="text-align:center"><?=$r['unidad']?></td>
     <td style="text-align:center"><?=$r[cantidad]?></td>
     <td style="text-align:right"><?=$r[precio]?></td>
     <td style="text-align:right"><?=money($r[iva])?></td>
@@ -172,7 +176,7 @@ if(isset($_GET[section]) && (Administrador() || ComprasVentas() || Ventas())){
 						height:560,
 						preserveContent: false
 						} )">
-				<img src="imagenes/letter.png" style="margin-bottom:-6px" />&nbsp;&nbsp;<b>Enviar por e-mail</b>
+				<img src="imagenes/shownote.png" style="margin-bottom:-6px" />&nbsp;&nbsp;<b>Enviar por e-mail</b>
 			</a>
 		</td>
 	</tr>

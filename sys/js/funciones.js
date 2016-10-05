@@ -1,4 +1,4 @@
-function submitenter(e,myfield,myform){
+﻿function submitenter(e,myfield,myform){
 	var keycode;
 	if(window.event){
 		keycode = window.event.keyCode;
@@ -104,3 +104,40 @@ function bak2(cell){
 function goto(url){
 	window.location = url;
 }
+
+/*
+3 Octubre 2016
+Si es administrador, agregar campo de gestión de USD
+So es de otro tipo mostrar el valor
+*/
+$().ready(function(){
+	var usdContainer = $('<div id="usdContainer"></div>');
+	if(_isAdmin){
+		var inputForm = $("<form><button type='submit'>Cambiar valor de USD</button></form>");
+		var usdInput = $("<input type='text' value='" + _usd + "' />");
+		// var usdButton = $("");
+		inputForm.submit(function(){
+			var usdVal = usdInput.val();
+			if(!isNaN(usdVal))
+			{			
+				var url = "ajax_tools.php?usd_update=" + usdVal;
+				var r = procesar(url);
+				if(r == 1)
+					alert("Ha ocurrido un error. Intente nuevamente más tarde.");
+				else
+					alert("El valor de USD ha sido actualizado.");
+			}
+			else
+				alert("El valor debe ser numérico.");
+			
+			return false;
+			
+		});
+		
+		usdContainer.append(inputForm.prepend(usdInput));
+	}
+	else
+		usdContainer.append('Valor actual de USD: $' + _usd.toFixed(2));
+	
+	$('.header_h1:first').prepend(usdContainer);
+});

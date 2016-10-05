@@ -174,24 +174,24 @@ while($row2 = mysql_fetch_assoc($grupos)){
     <th>Ciudad</th>
     <th>Tel&eacute;fono</th>
     <th>Status</th>
-    <?php
-    if(Administrador())
-		{
-		?>
+    <?php if(Administrador()) { ?>
     <th>Facturas</th>
     <?php
     }
+		
 		if(Administrador() || CCC()){
     ?>
     <th>Abonar</th>
     <?php
 		}
-		if(Administrador()){
+		
+		if(Administrador() || Ventas()){
 		?>
     <th>Editar</th>
     <?php
 		}
-		if(Administrador() || Ventas()){
+		
+		if(Administrador()){
 		?>
     <th>&nbsp;</th>
     <?php } ?>
@@ -203,8 +203,8 @@ while($r = mysql_fetch_assoc($clientes)){
 ?>
   <tr id="tr_<?=$r[clave]?>" class="<?=$class?>" onmouseover="this.setAttribute('class', 'tr_list_over');" onmouseout="this.setAttribute('class', '<?=$class?>');">
     <td style="text-align:center"><?=$r[clave]?></td>
-    <td style="text-align:center"><?php if(Administrador() || Ventas()){ editNow("clientes","clave","grupo",$r[clave],"grupo",$r[grupo],-1,2,"40px");} else { echo $r[grupo];} ?></td>
-    <td><?php editNow("clientes","clave","nombre",$r[clave],"nombre",$r[nombre],-1,2,"100%"); ?></td>
+    <td><?=$r['grupo']?></td>
+    <td><?=$r['nombre']?></td>
     <td style="text-align:center"><?=$r[municipio]?></td>
     <td style="text-align:center"><?=$r[telefonos]?></td>
     <td width="10" style="text-align:center; font-weight:bold">
@@ -231,11 +231,11 @@ while($r = mysql_fetch_assoc($clientes)){
     <td style="text-align:center"><a href="?section=ingresos_por_cliente&clave=<?=$r[clave]?>"><img src="imagenes/bundle-16x16x32b.png" width="16" height="16" /></a></td>
     <?php
 		}
-		if(Administrador()){ ?>
+		if(Administrador() || Ventas()){ ?>
     <td style="text-align:center"><a href="?section=clientes_formulario&modificar=<?=$r[clave]?>&pagina=<?=$_GET[pagina]?>"><img src="imagenes/pencil.png" alt="Modificar datos"/></a></td>
     <?php
 		}
-		if(Administrador || Ventas()){
+		if(Administrador()){
 		?>
     <td><a href="javascript: eliminar(<?=$r[clave]?>);"><img src="imagenes/deleteX.png" /></a></td>
     <?php } ?>

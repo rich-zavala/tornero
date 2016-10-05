@@ -177,6 +177,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 	<script type="text/javascript" src="../librerias/formTools.js"></script>
 	<script>
 	//Definir variables
+	var _usd = parseFloat(<?=getUSD()?>);
 	var almacenes = <?=json_encode_utf8($_SESSION['almacenes'])?>;
 	var _folio = '<?=$folio?>';
 	var _serie = '<?=$info['serie']?>';
@@ -199,6 +200,9 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 	var _recargo_concepto = '<?=(isset($info['recargo_concepto'])) ? $info['recargo_concepto'] : ''?>';
 	var _recargo_porcentaje = '<?=(isset($info['recargo_porcentaje'])) ? $info['recargo_porcentaje'] : ''?>';
 	var _recargo_importe = '<?=(isset($info['recargo_importe'])) ? $info['recargo_importe'] : ''?>';
+	
+	//Colección de unidades
+	var _unidades = <?=json_encode(utf8ize(unidades()))?>;
 	</script>
 </head>
 <body>
@@ -348,8 +352,9 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 									<th><i class="fa fa-w fa-cube"></i> Producto / Complemento</th>
 									<th><span title="Disponibilidad en almac&eacute;n" data-toggle="tooltip" data-placement="top"><i class="fa fa-w fa-tasks"></i> Dis.</span></th>
 									<th><span title="Cantidad a retirar del inventario" data-toggle="tooltip" data-placement="top" class="text-warning"><i class="fa fa-w fa-shopping-cart"></i> Cant A.</span></th>
+									<th><span title="Unidad de medida desde el almacén" data-toggle="tooltip" data-placement="top"><i class="fa fa-w fa-cubes"></i> Unid. A.</span></th>
 									<th><span title="Cantidad a mostrar en factura" data-toggle="tooltip" data-placement="top" class="text-danger"><i class="fa fa-w fa-cart-plus"></i> Cant. F.</span></th>
-									<th><span title="Unidad de medida" data-toggle="tooltip" data-placement="top"><i class="fa fa-w fa-cubes"></i> Unid.</span></th>
+									<th><span title="Unidad de medida para la factura" data-toggle="tooltip" data-placement="top"><i class="fa fa-w fa-cubes"></i> Unid. F.</span></th>
 									<th><i class="fa fa-w fa-usd"></i> Precio</th>
 									<th><i class="fa fa-w">%</i> I.V.A.</th>
 									<th></th>
@@ -366,7 +371,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 									<td>
 										<div class="form-group" ng-class="{ 'has-error': (!p.form.ajax && v['codigo_' + $index].$error.editable) }">
 											<div class="input-group w100 producto-codigo">
-												<input type="text" name="codigo_{{$index}}" class="form-control prod-cod" typeahead="prod.codigo for prod in productoBuscar($viewValue)" typeahead-append-to-body="true" typeahead-template-url="../librerias/angular-templates/ventas-producto-codigo.html" typeahead-select-on-blur="true" typeahead-on-select="productoSet($item, $model, $label, p, $index)" typeahead-editable="false" typeahead-select-on-exact="true" ng-blur="productoConfirmar($index)" typeahead-loading="p.form.ajax" ng-class="{ clienteAjax: p.form.ajax }" ng-init="setPop(); focusCode($index);" ng-keydown="productoEnter($event, $index)" ng-model="p.form.codigo" ng-disabled="p.form.isEspecial" autocomplete="false">
+												<input type="text" name="codigo_{{$index}}" class="form-control prod-cod" typeahead="prod.codigo for prod in productoBuscar($viewValue)" typeahead-append-to-body="true" typeahead-template-url="../librerias/angular-templates/ventas-producto-codigo.html" typeahead-select-on-blur="true" typeahead-on-select="productoSet($item, $model, $label, p, $index)" typeahead-editable="false" typeahead-select-on-exact="true" ng-blur="productoConfirmar($index)" typeahead-loading="p.form.ajax" ng-class="{ clienteAjax: p.form.ajax }" ng-init="setPop(); focusCode($index);" ng-keyup="productoEnter($event, $index)" ng-model="p.form.codigo" ng-disabled="p.form.isEspecial" autocomplete="false">
 												<span class="input-group-btn">
 													<button class="btn btn-default btn-sm fa-icon" type="button" tabindex="-1" title="Buscar producto en cat&aacute;logo" ng-click="productoBuscarModal($index)"><i class="fa fa-search"></i></button>
 												</span>
@@ -375,7 +380,6 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 									</td>
 									<td class="campo-texto w100">
 										<input name="especial" id="especial{{$index}}" class="form-control marginBottom5 w100" ng-if="p.form.isEspecial" ng-model="p.factura.especial" ng-init="focusMe('especial', $index, p.form.isEspecial)" placeholder="Descripci&oacute;n principal del producto" autocomplete="false" autofocus>
-										
 										<div class="text-muted" ng-if="!(p.factura.id_producto > 0) && !p.form.isEspecial">Defina el c&oacute;digo del producto.</div>
 										<div ng-if="(!p.factura.id_producto == 0 && p.factura.id_producto > 0) || p.form.isEspecial">
 											<div ng-if="!p.form.isEspecial">{{p.form.descripcion}}</div>
@@ -386,9 +390,23 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 									</td>
 									<td class="campo-texto" ng-class="{ 'text-right': !p.form.isEspecial, 'text-center': p.form.isEspecial }"><span ng-if="p.form.isEspecial">N/A</span><span ng-if="!p.form.isEspecial">{{p.form.disponible[0].cantidad}}</span></td>
 									<td><div class="form-group" ng-class="{ 'has-error': v['p_cantidad_' + $index].$invalid }"><input type="text" class="form-control text-right producto-numerico" name="p_cantidad_{{$index}}" ng-disabled="!(p.factura.id_producto > 0) || p.form.isEspecial" ng-model="p.factura.cantidad" ng-blur="productoSuficiente($index, $event)" valid-number autocomplete="false"></div></td>
-									<td><div class="form-group" ng-class="{ 'has-error': v['p_canti_' + $index].$invalid }"><input type="text" class="form-control text-right producto-numerico" name="p_canti_{{$index}}" ng-disabled="!(p.factura.id_producto > 0) && !p.form.isEspecial" ng-model="p.factura.canti_" ng-blur="productoCantidad($index)" valid-number autocomplete="false"></div></td>
 									<td class="text-center">{{p.factura.unidad}}</td>
-									<td><div class="form-group" ng-class="{ 'has-error': v['p_precio_' + $index].$invalid }"><input type="text" class="form-control text-right producto-numerico-largo" name="p_precio_{{$index}}"  ng-disabled="!(p.factura.id_producto > 0) && !p.form.isEspecial" ng-model="p.factura.precio" valid-number autocomplete="false"></div></td>
+									<td><div class="form-group" ng-class="{ 'has-error': v['p_canti_' + $index].$invalid }"><input type="text" class="form-control text-right producto-numerico" name="p_canti_{{$index}}" ng-disabled="!(p.factura.id_producto > 0) && !p.form.isEspecial" ng-model="p.factura.canti_" ng-blur="productoCantidad($index)" valid-number autocomplete="false"></div></td>
+									<td><div class="form-group" ng-class="{ 'has-error': v['p_unidad_' + $index].$invalid }">
+										<select type="text" class="form-control text-right producto-numerico select_unidad" name="p_unidad_{{$index}}" ng-disabled="!(p.factura.id_producto > 0) && !p.form.isEspecial" ng-model="p.factura.unidad_factura">
+											<option ng-repeat="unidad in unidades">{{unidad}}</option>
+										</select>
+									</div></td>
+									<td class="campo-precio">
+										<!--<div class="form-group" ng-class="{ 'has-error': v['p_precio_' + $index].$invalid }"><input type="text" class="form-control text-right producto-numerico-largo" name="p_precio_{{$index}}"  ng-disabled="!(p.factura.id_producto > 0) && !p.form.isEspecial" ng-model="p.factura.precio" valid-number autocomplete="false"></div>-->
+										
+										<div class="input-group input-group-sm" ng-class="{ 'has-error': v['p_precio_' + $index].$invalid }">
+											<input type="text" class="form-control text-right producto-numerico-largo" name="p_precio_{{$index}}"  ng-disabled="!(p.factura.id_producto > 0) && !p.form.isEspecial" ng-model="p.factura.precio" valid-number autocomplete="false">
+											<span class="input-group-btn" title="Aplicar USD">
+												<button class="btn btn-primary ventas-usd-btn" type="button" tabindex="-1" ng-disabled="!(p.factura.id_producto > 0) || usdAplicados[$index]" ng-click="aplicarUSD(p, $index)"><i class="fa fa-usd"></i></button>
+											</span>
+										</div>
+									</td>
 									<td><div class="form-group" ng-class="{ 'has-error': v['p_iva_' + $index].$invalid }"><input type="text" class="form-control text-right producto-numerico" name="p_iva_{{$index}}"  ng-disabled="!(p.factura.id_producto > 0) && !p.form.isEspecial" ng-model="p.factura.iva" valid-number autocomplete="false"></div></td>
 									<td><button class="btn btn-xs btn-danger btn-table" tabindex="-1" type="button" ng-click="productoRemover($index)"><i class="fa fa-times"></i></button></td>
 								</tr>
@@ -452,6 +470,8 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 				</form>
 				
 				<hr>
+				
+				<div class="pull-right negritas text-warning">Tarifa USD: <?=money(getUSD())?></div>
 				
 				<h5 class="negritas">Teclas r&aacute;pidas</h5>
 				<ul class="list-inline">

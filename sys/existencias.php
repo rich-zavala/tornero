@@ -60,7 +60,7 @@ $_POST[printable] = 0;
 titleset("Gesti&oacute;n de Existencias");
 
 //RESTRICCION
-if(Administrador() || Compras() || Ventas()){
+if(Administrador()){
 	$o = array(
 						 "0" => "<a href='?section=existencias_modificar' ><img src='imagenes/pencil.png' /> Modificar Existencias</a>",
 						 "1" => "<a href='#' onclick='eliminar_lotes();'><img src='imagenes/deleteX.png' /> Eliminar Lotes sin existencias</a>"
@@ -164,7 +164,7 @@ foreach($_SESSION[almacenes] as $k => $v){
 	}
 ?>
 	</td>
-    <td style="text-align:right"><a href="existencias_detalles.php?id_producto=<?=$r['id_producto']?>&id_almacen=<?=$_GET[id_almacen]?>"><?=$r['cantidad']?></a></td>
+    <td style="text-align:right"><a href="existencias_detalles.php?id_producto=<?=$r['id_producto']?>&id_almacen=<?=$_GET[id_almacen]?>" target="_new"><?=$r['cantidad']?></a></td>
     <td style="text-align:right"><?=money($r['precio'])?></td>
 		<td><a href="../librerias/barcode/bc.php?text=<?=$r['codigo_barras'] ?>" target="_<?=$r['codigo_barras']?>" title="Generar código de barras"><img src="../librerias/assets/barcode.png"></a></td>
   </tr>

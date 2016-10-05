@@ -172,3 +172,11 @@ input.producto-numerico-largo {
 	padding-top: 4px;
 	padding-bottom: 4px;
 }
+.select_unidad{ min-width: 84px; }
+
+/* 4 Oct 2016 - USD en ventas y unidades de factura */
+.campo-precio{ min-width: 90px; }
+.input-group-sm .input-group-btn .btn {
+	padding: 2px 6px;
+	height: 22px;
+}

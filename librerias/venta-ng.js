@@ -5,6 +5,7 @@ app.controller('ventaFormulario', ['$scope', '$rootScope', '$http', '$filter', '
 	//Herramientas
 	$scope.moment = moment;
 	$scope.setPops = setPops;
+	$scope.unidades = _unidades;
 	
 	//Definir almacenes
 	$scope.almacenes = almacenes;
@@ -60,6 +61,7 @@ app.controller('ventaFormulario', ['$scope', '$rootScope', '$http', '$filter', '
 			cantidad: 0,
 			canti_: 0,
 			unidad: 'PZA',
+			unidad_factura: 'PZA',
 			especial: '',
 			complemento: '',
 			precio: 0,
@@ -160,6 +162,7 @@ app.controller('ventaFormulario', ['$scope', '$rootScope', '$http', '$filter', '
 			producto.factura.id_producto = item.id_producto;
 			producto.factura.canti_ = item.canti_;
 			producto.factura.unidad = (item.unidad != null) ? item.unidad : 'PZA';
+			producto.factura.unidad_factura = producto.factura.unidad;
 			producto.factura.complemento = item.complemento;
 			producto.factura.precio = item.precio;
 			producto.factura.iva = item.iva;
@@ -217,6 +220,7 @@ app.controller('ventaFormulario', ['$scope', '$rootScope', '$http', '$filter', '
 			producto.factura.precio = item.precio;
 			producto.factura.iva = item.iva;
 			producto.factura.unidad = item.unidad;
+			producto.factura.unidad_factura = producto.factura.unidad;
 			producto.form.descripcion = item.descripcion;
 			producto.form.disponible = item.dispo;
 			
@@ -261,7 +265,18 @@ app.controller('ventaFormulario', ['$scope', '$rootScope', '$http', '$filter', '
 	
 	//¡Producto sin enter!
 	$scope.productoEnter = function(keyEvent, index) {
-		if(keyEvent.which === 13)
+		if($(v['codigo_' + index]).val() == null || $(v['codigo_' + index]).val() == '')
+		{
+			if($scope.f.productos[index].factura.id_producto != null)
+			{
+				$scope.f.productos[index] = new producto_info();
+				delete $scope.usdAplicados[index];
+				$timeout(function() {
+					$(v['codigo_' + index]).focus();
+				}, 50);
+			}
+		}
+		else if(keyEvent.which === 13)
 		{
 			$scope.focusMe(index);
 			keyEvent.preventDefault();
@@ -442,6 +457,13 @@ app.controller('ventaFormulario', ['$scope', '$rootScope', '$http', '$filter', '
 		$scope.f.factura.recargo_porcentaje = $scope.f.recargo.porcentaje;
 	});
 	
+	/* Aplicar tasa USD */
+	$scope.usdAplicados = {};
+	$scope.aplicarUSD = function(producto, index){
+		producto.factura.precio = (producto.factura.precio * _usd).toFixed(2);
+		$scope.usdAplicados[index] = true;
+	};
+	
 	/* Submit! */
 	//Set alerts
 	$scope.alerts = { ongoing: false };
@@ -502,8 +524,12 @@ app.controller('ventaFormulario', ['$scope', '$rootScope', '$http', '$filter', '
 						if((p.form.isEspecial && $.trim(p.factura.especial).length > 0) || p.factura.id_producto > 0)
 						{
 							//Unidades
-							if($.trim(p.factura.unidad.length) == 0) p.factura.unidad = 'PZA';
 							conProductos = true;
+							if($.trim(p.factura.unidad.length) == 0)
+							{
+								p.factura.unidad = 'PZA';
+								p.unidad_factura = p.factura.unidad;
+							}
 						}
 					});
 					$scope.alerts.productos = !conProductos;

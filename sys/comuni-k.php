@@ -34,6 +34,10 @@ if (isset($_GET[ok])) alerttogo("get", "ok", "Registro aprobado.");
 	<script type="text/javascript" src="js/highslide/rich.js"></script>
 	<script type="text/javascript" src="js/highslide/comuni-k_settings.js"></script>
 	<script type="text/javascript" src="js/funciones.js"></script>
+	<script>
+	var _isAdmin = <?=Administrador() ? 'true' : 'false'?>;
+	var _usd = <?=getUSD()?>;
+	</script>
 </head>
 <body>
 	<span id="_extra"></span>

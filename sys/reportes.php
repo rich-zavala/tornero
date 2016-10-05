@@ -9,7 +9,7 @@ $reps = array(
 							array("Reporte de Cobros","reporte_cobros"),
 							array("Ventas Totales","reporte_ventas_totales")
 							);
-if(Contador())
+if(Contador() or Ventas())
 {
 $reps = array(
 							array("Reporte de Movimientos","reporte_movimientos"),
@@ -20,6 +20,7 @@ $reps = array(
 							array("Ventas Totales","reporte_ventas_totales")
 							);
 }
+
 //Parámetros para el ícono "REGRESAR" del menú superior
 foreach($_GET as $k => $v){
 	$params .= "&{$k}={$v}";

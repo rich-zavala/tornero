@@ -110,13 +110,12 @@ switch($_SESSION['id_tipousuario']){
   case "6": //Ventas
     $o = array(
 			$ventas,
-			$cxc,
-			$notas_c,
-			$facturar,
-			$existencias,
+			$cotizar,
 			$productos,
+			$existencias,
 			$clientes,
-			$retiros
+			$reportes,
+			$facturar
     );
   break;
   case "7": //compras

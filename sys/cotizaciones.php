@@ -17,9 +17,11 @@ if(!isset($_GET['registros'])){
 	$per_page = $_GET['registros'];
 }
 
-if($_GET[folio] != ""){
+if($_GET['cliente'] != "")
+	$where = "AND cliente LIKE '%{$_GET['cliente']}%'";
+
+if($_GET[folio] != "")
 	$where = "AND folio LIKE '%{$_GET[folio]}%'";
-}
 
 if(!isset($_GET[order])){
 	$_GET[order] = "folio";
@@ -118,14 +120,17 @@ function cancelar_compra(folio,obj){
 }
 </script>
 <form name="filtro" id="filtro" method="get" action="" class="<?=$_POST[class_filtro]?>">
-  <p>Entre
+	<p>Cliente: <input type="text" name="cliente" value="<?=$_GET[cliente]?>" style="width: 300px;" /></p>
+  <p>
+		Folio:
+    <input name="folio" type="text" id="folio" onkeypress="return submitenter(event,this,'filtro')" value="<?=$_GET[folio]?>" size="8"/>
+    &nbsp;&nbsp;&nbsp;
+		Entre
     <input name="fecha1" size="10" maxlength="10" readonly="readonly" value="<?=$_GET[fecha1]?>" />
     <img src="imagenes/calendar.png" onclick="displayDatePicker('fecha1');" style="margin-bottom:-3px; cursor:pointer" />&nbsp;&nbsp;&nbsp;y&nbsp;&nbsp;
     <input name="fecha2" size="10" maxlength="10" readonly="readonly" value="<?=$_GET[fecha2]?>" />
-    <img src="imagenes/calendar.png" onclick="displayDatePicker('fecha2');" style="margin-bottom:-3px; cursor:pointer" /></p>
-  <p> Folio:
-    <input name="folio" type="text" id="folio" onkeypress="return submitenter(event,this,'filtro')" value="<?=$_GET[folio]?>" size="8"/>
-    &nbsp;&nbsp;&nbsp;
+    <img src="imagenes/calendar.png" onclick="displayDatePicker('fecha2');" style="margin-bottom:-3px; cursor:pointer" />
+		&nbsp;&nbsp;&nbsp;
     Mostrar:
     <select name="registros" id="registros">
       <option value="10" <?=selected($_GET[registros],10)?>>10</option>
@@ -157,7 +162,7 @@ function cancelar_compra(folio,obj){
     </select>
     &nbsp;&nbsp;
     <input name="section" type="hidden" id="section" value="cotizaciones" />
-    <input name="Buscar" type="submit" value="Crear lista de Cotizaciones" style="font-size:11px"/>
+    <button style="font-size:11px" type="submit">Crear lista de cotizaciones</button>
   </p>
   <p>Encontrados: <?=$total_records?> coincidencias</p>
 </form>
@@ -169,12 +174,7 @@ function cancelar_compra(folio,obj){
     <th>Fecha</th>
     <th>Vendedor</th>
     <th>Importe</th>
-    <?php;
-		if((Administrador() || Compras()) and @$r['status'] == 0)
-		{
-		?>
-    <th>&nbsp;</th>
-    <?php } ?>
+    <th>Esitar</th>
     <th>Status</th>
   </tr>
   <?php
@@ -188,39 +188,17 @@ while($r = mysql_fetch_assoc($query)){
     <td><?=FormatoFecha($r[fecha])?></td>
     <td><?=$r[usuario]?></td>
     <td style="text-align:right"><?=money($r[total])?><?=mon($r[moneda])?></td>
-    
-    <td>
-    	<?php
-			if((Administrador() || Compras()) && $r[status] == 0)
-			{
-			?>
-    	<a href="?section=cotizaciones_formulario&editar=<?=$r[folio]?>" style="margin-right: 4px;"><img src="imagenes/pencil.png" /></a>
-			<a href="cotizaciones_formulario_2016.php?editar&folio=<?=$r[folio]?>"><img src="imagenes/pencil2.png" /></a>
-      <?php
-			}
-			?>
-    </td>
-    
-    <?php
-		if(Administrador())
-		{
-		?>
-    <?php } ?>
+    <td><a href="cotizaciones_formulario_2016.php?editar&folio=<?=$r[folio]?>"><img src="imagenes/pencil2.png" /></a></td>
     <td style="font-weight:bold; text-align:center">
-      <?php if($r[status] == "0"){
-							if(Administrador() || ComprasVentas() || Ventas()){	
-			?>
+      <?php if($r[status] == "0"){ ?>
       <span id="estado_span<?=$r[folio]?>">
       <select id="status_list" onchange="cancelar_compra('<?=$r[folio]?>',this);">
         <option value="0">Normal</option>
         <option value="1">Cancelar</option>
       </select>
       </span>
-      <?php
-							} else {
-								echo "Normal";
-							}
-					} else { echo "Cancelada"; } ?></td>
+      <?php } else { echo "Cancelada"; } ?>
+		</td>
   </tr>
   <? }?>
 </table>

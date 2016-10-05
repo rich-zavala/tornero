@@ -62,3 +62,28 @@ input[type=radio] {
 .kreator_small img {
   margin-bottom: 4px;
 }
+
+/* 3 Oct 2016 - USD Manager */
+#usdContainer {
+	position: absolute;
+	right: 10px;
+	z-index: 1;
+	margin-top: -4px;
+	font-weight: bold;
+}
+
+#usdContainer form {
+  margin-top: -2px;
+  padding-right: 6px;
+}
+
+#usdContainer form input {
+  width: 30px;
+  text-align: right;
+  padding-right: 4px;
+}
+
+#usdContainer form button {
+  margin-left: 4px;
+  font-size: 11px;
+}

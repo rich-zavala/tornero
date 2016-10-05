@@ -244,4 +244,20 @@ if(isset($_GET[morosos]))
 	echo json_encode($c);
 	exit;
 }
+
+/*
+3 oct 2016 - Actualizar el valor de USD
+*/
+if(isset($_GET['usd_update']))
+{
+	include ("KREATOR-USUARIOS-ACCESS.php");
+	if(Administrador() and is_numeric($_GET['usd_update']))
+	{
+		$db->execute("UPDATE vars SET dolar = " . $_GET['usd_update']);
+		if(floatval(getUSD()) != floatval($_GET['usd_update']))
+			echo 1;
+	}
+	else
+		echo 1;
+}
 ?>

@@ -112,17 +112,7 @@ if(!isset($_GET['ok']))
 }
 
 //12 agosto 2016 > Catálogo de unidades de medida
-$unidades = array(
-	'CMS',
-	'GRS',
-	'JGO',
-	'KG',
-	'LT',
-	'MT',
-	'PZA',
-	'Pulgada',
-	'SERV'
-);
+$unidades = unidades();
 
 //Preestablecer la unidad
 if(!isset($data['unidad']))

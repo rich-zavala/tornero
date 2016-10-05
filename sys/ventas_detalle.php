@@ -93,6 +93,7 @@ titleset("Detalles de la Venta &quot;{$_GET[folio]}&quot;");
 					case '15':echo "Condonación"; break;
 					case '16':echo "Cancelación"; break;
 					case '17':echo "Compensación"; break;
+					case '28':echo "Tarjeta de Débito"; break;
 					case '98':echo "&quot;NA&quot;"; break;
 					case '99':echo "Otros"; break; 
 				}
@@ -147,7 +148,8 @@ titleset("Detalles de la Venta &quot;{$_GET[folio]}&quot;");
       <tr bgcolor="#BF2D2D" style="color: white">
         <th>C&oacute;digo</th>
         <th>Descripci&oacute;n</th>
-        <th>Unidad</th>
+        <th title="Unidad de salida del almac&aacute;n">Unidad A.</th>
+        <th title="Unidad mostrada en la factura">Unidad F.</th>
         <th>Cant.<br>Almacén</th>
         <th>Cant.<br>Factura</th>
         <th>Precio</th>
@@ -165,6 +167,7 @@ titleset("Detalles de la Venta &quot;{$_GET[folio]}&quot;");
 		fp.cantidad,
 		fp.canti_,
 		fp.unidad,
+		fp.unidad_factura,
 		fp.precio,
 		fp.descuento,
 		fp.iva,
@@ -220,6 +223,7 @@ titleset("Detalles de la Venta &quot;{$_GET[folio]}&quot;");
 		?>
     </td>
     <td style="text-align:center"><?=htmlentities($r['unidad'])?></td>
+    <td style="text-align:center"><?=htmlentities($r['unidad_factura'])?></td>
     <td style="text-align:right"><?=$r['cantidad']?></td>
     <td style="text-align:right"><?=$r['canti_']?></td>
     <td style="text-align:right"><?=money($r['precio'])?></td>

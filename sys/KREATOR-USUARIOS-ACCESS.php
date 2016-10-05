@@ -47,12 +47,12 @@ switch($_SESSION[id_tipousuario]){
   case "6": //Ventas
     $_permisos = array(
 			"ventas",
-			"cxc",
-			"notas_c",
-			"facturar",
+			"cotizaciones",
 			"existencias",
 			"productos",
-			"clientes"
+			"facturar",
+			"clientes",
+			"reporte"
       );
     $_restric = array("ingresos_por_cliente", "ingresos_varios_clientes");
   break;

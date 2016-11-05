@@ -265,7 +265,14 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 										</div>
 									</td>
 									<td><div class="form-group" ng-class="{ 'has-error': v['p_cantidad_' + $index].$invalid }"><input type="text" class="form-control text-right producto-numerico" name="p_cantidad_{{$index}}" ng-disabled="!(p.factura.id_producto > 0) && !p.form.isEspecial" ng-model="p.factura.cantidad" valid-number autocomplete="false"></div></td>
-									<td class="text-center">{{p.factura.unidad}}</td>
+									<!--<td class="text-center">{{p.factura.unidad}}</td>-->
+									<td>
+										<div class="form-group" ng-class="{ 'has-error': v['p_unidad_' + $index].$invalid }">
+											<select type="text" class="form-control text-right producto-numerico select_unidad" name="p_unidad_{{$index}}" ng-disabled="!(p.factura.id_producto > 0) && !p.form.isEspecial" ng-model="p.factura.unidad">
+												<option ng-repeat="unidad in unidades">{{unidad}}</option>
+											</select>
+										</div>
+									</td>
 									<td><div class="form-group" ng-class="{ 'has-error': v['p_precio_' + $index].$invalid }"><input type="text" class="form-control text-right producto-numerico-largo" name="p_precio_{{$index}}"  ng-disabled="!(p.factura.id_producto > 0) && !p.form.isEspecial" ng-model="p.factura.precio" valid-number autocomplete="false"></div></td>
 									<td><div class="form-group" ng-class="{ 'has-error': v['p_iva_' + $index].$invalid }"><input type="text" class="form-control text-right producto-numerico" name="p_iva_{{$index}}"  ng-disabled="!(p.factura.id_producto > 0) && !p.form.isEspecial" ng-model="p.factura.iva" valid-number autocomplete="false"></div></td>
 									<td><button class="btn btn-xs btn-danger btn-table" tabindex="-1" type="button" ng-click="productoRemover($index)"><i class="fa fa-times"></i></button></td>

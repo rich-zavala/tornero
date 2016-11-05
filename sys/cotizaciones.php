@@ -174,7 +174,7 @@ function cancelar_compra(folio,obj){
     <th>Fecha</th>
     <th>Vendedor</th>
     <th>Importe</th>
-    <th>Esitar</th>
+    <th>Editar</th>
     <th>Status</th>
   </tr>
   <?php

@@ -11,7 +11,7 @@ include("funciones/funciones.php");
 
 /* Consulta genérica para cotizaciones y ediciones */
 $cg = "SELECT
-			%s c.id_producto, c.complemento, c.especial, c.unidad, c.cantidad,
+			%s c.id_producto, c.complemento, c.especial, c.cantidad,
 			%s c.precio, c.iva, c.importe, p.codigo_barras codigo, p.descripcion,
 			IF( p.cantidad IS NULL, CONCAT('[{ \"lote\": ', '\"', c.lote,'\", \"cantidad\": 0}]'), GROUP_CONCAT(CONCAT('[{ \"lote\": ', '\"', p.lote,'\", \"cantidad\": ', p.cantidad, '}]'))) dispo
 			FROM %s c
@@ -46,7 +46,7 @@ else //Editar
 				FROM facturas WHERE folio = '{$_GET['folio']}' AND serie = '{$_GET['serie']}'";
 	$info = $db->fetchRow($s);
 	
-	$s = sprintf($cg, null, "c.canti_, c.lote,", "facturas_productos", "c.folio_factura = '{$_GET['folio']}' AND c.serie = '{$_GET['serie']}'", "c.id_facturaproducto");
+	$s = sprintf($cg, null, "c.canti_, c.lote, c.unidad,", "facturas_productos", "c.folio_factura = '{$_GET['folio']}' AND c.serie = '{$_GET['serie']}'", "c.id_facturaproducto");
 	$edicion_productos = $db->fetch($s);
 }
 
@@ -130,7 +130,7 @@ if(count($request) > 0)
 $cotizacion = isset($_GET['cotizacion']);
 if($cotizacion)
 {
-	$s = sprintf($cg, "c.folio_cotizacion cotizacion,", "c.cantidad canti_,", "cotizaciones_productos_vista", "c.folio_cotizacion = '{$_GET['cotizacion']}'", "c.id_cotizacionproducto");
+	$s = sprintf($cg, "c.folio_cotizacion cotizacion, c.unidad unidad_factura, p.unidad,", "c.cantidad canti_,", "cotizaciones_productos_vista", "c.folio_cotizacion = '{$_GET['cotizacion']}'", "c.id_cotizacionproducto");
 	$cotizacion_productos = $db->fetch($s);
 	$cotizacion = count($cotizacion_productos) > 0;
 }

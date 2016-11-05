@@ -162,7 +162,7 @@ app.controller('ventaFormulario', ['$scope', '$rootScope', '$http', '$filter', '
 			producto.factura.id_producto = item.id_producto;
 			producto.factura.canti_ = item.canti_;
 			producto.factura.unidad = (item.unidad != null) ? item.unidad : 'PZA';
-			producto.factura.unidad_factura = producto.factura.unidad;
+			producto.factura.unidad_factura = item.unidad_factura;
 			producto.factura.complemento = item.complemento;
 			producto.factura.precio = item.precio;
 			producto.factura.iva = item.iva;

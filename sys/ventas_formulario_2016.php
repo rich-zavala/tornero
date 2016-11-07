@@ -11,7 +11,7 @@ include("funciones/funciones.php");
 
 /* Consulta genérica para cotizaciones y ediciones */
 $cg = "SELECT
-			%s c.id_producto, c.complemento, c.especial, c.cantidad,
+			%s c.id_producto, c.complemento, c.especial, c.cantidad, unidad_factura,
 			%s c.precio, c.iva, c.importe, p.codigo_barras codigo, p.descripcion,
 			IF( p.cantidad IS NULL, CONCAT('[{ \"lote\": ', '\"', c.lote,'\", \"cantidad\": 0}]'), GROUP_CONCAT(CONCAT('[{ \"lote\": ', '\"', p.lote,'\", \"cantidad\": ', p.cantidad, '}]'))) dispo
 			FROM %s c

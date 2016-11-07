@@ -82,7 +82,7 @@ else
 }
 
 if(!isset($_GET[order])){
-	$_GET[order] = "folio";
+	$_GET[order] = "f.folio";
 	$_GET[direction] = "DESC";
 }
 
@@ -123,6 +123,7 @@ $s = "SELECT
 				id_cliente,
 				moneda,
 				f.status,
+				c.nombre cliente_nombre,
 				c.nombre cliente,
 				f.importe total,
 				f.tipo,
@@ -131,9 +132,9 @@ $s = "SELECT
 				IF(i.id IS NOT NULL, 1, 0) isCFDI,
 				IF(fecha_factura >= fecha_inicio_cfdi AND IF(INSTR(f.folio, 'NOTA') = 0, 1, 0) = 1, 1, 0) isCFDI_fecha
 			FROM (
-				SELECT * FROM facturas
+				SELECT * FROM facturas_listado f
 				WHERE 1 {$where_factura}
-				ORDER BY fecha_captura DESC, {$_GET[order]} + 0 {$_GET[direction]}
+				ORDER BY {$_GET[order]} + 0 {$_GET[direction]}, fecha_factura DESC, folio DESC
 				{$pagi}
 			) f
 			INNER JOIN (
@@ -143,12 +144,9 @@ $s = "SELECT
 			) c ON c.clave = f.id_cliente
 			INNER JOIN almacenes a ON f.id_almacen = a.id_almacen
 			INNER JOIN usuarios u ON f.id_facturista = u.id_usuario
-			/*LEFT JOIN (
-				SELECT id, factura FROM devoluciones_clientes WHERE status = 0
-			) dev ON dev.factura = f.folio*/
 			LEFT JOIN cfdi i ON i.folio = f.folio AND i.serie = f.serie
-			JOIN vars v ORDER BY fecha_factura DESC, folio DESC";
- //echo $s;
+			JOIN vars v ORDER BY {$_GET[order]} + 0 {$_GET[direction]}, fecha_factura DESC, folio DESC";
+// echo $s;
 require_once('funciones/kgPager.class.php');
 $query = mysql_query($s) or die ($s.mysql_error());
 $total_records = mysql_num_rows($query);
@@ -220,13 +218,13 @@ foreach($_SESSION[almacenes] as $k => $v){
     </select>
     &nbsp;&nbsp;&nbsp; Ordenar por:
     <select name="order" id="select">
-      <option value="folio" <?=selected($_GET[order],"folio")?>>Folio</option>
+      <option value="f.folio" <?=selected($_GET[order],"f.folio")?>>Folio</option>
       <option value="fecha_factura" <?=selected($_GET[order],"fecha_factura")?>>Fecha</option>
-      <option value="cliente" <?=selected($_GET[order],"cliente")?>>Cliente</option>
+      <option value="cliente_nombre" <?=selected($_GET[order],"cliente_nombre")?>>Cliente</option>
       <option value="usuario" <?=selected($_GET[order],"usuario")?>>Vendedor</option>
       <option value="almacenes.descripcion" <?=selected($_GET[order],"almacenes.descripcion")?>>Almacen</option>
       <option value="importe" <?=selected($_GET[order],"importe")?>>Importe</option>
-      <option value="status" <?=selected("status",$_GET[order])?>>Status</option>
+      <option value="f.status" <?=selected("f.status",$_GET[order])?>>Status</option>
     </select>
 <select name="direction" id="select2">
       <option value="ASC" <?=selected("ASC",$_GET[direction])?>>Ascendente</option>

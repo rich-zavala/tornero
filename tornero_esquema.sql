@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50620
 File Encoding         : 65001
 
-Date: 2016-08-05 20:49:33
+Date: 2017-02-09 21:04:04
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -201,7 +201,7 @@ CREATE TABLE `clientes_memory` (
   KEY `cli_st` (`status`),
   KEY `cli_no` (`nombre`),
   KEY `cli_pais` (`pais`)
-) ENGINE=MEMORY AUTO_INCREMENT=7518 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=MEMORY DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- ----------------------------
 -- Table structure for compras
@@ -228,7 +228,7 @@ CREATE TABLE `compras` (
   KEY `dias_credito` (`dias_credito`),
   KEY `cancelado` (`status`),
   KEY `id` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2458 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=2459 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- ----------------------------
 -- Table structure for compras_detalle
@@ -245,7 +245,7 @@ CREATE TABLE `compras_detalle` (
   `sub_importe` decimal(10,2) NOT NULL,
   `importe` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10119 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=10120 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- ----------------------------
 -- Table structure for contrarecibos
@@ -329,14 +329,14 @@ CREATE TABLE `cotizaciones_productos` (
   `folio_cotizacion` varchar(255) COLLATE latin1_general_ci NOT NULL,
   `id_producto` int(11) NOT NULL,
   `cantidad` decimal(10,3) NOT NULL,
-  `unidad` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
+  `unidad` varchar(255) COLLATE latin1_general_ci NOT NULL DEFAULT 'PZA',
   `precio` decimal(10,2) NOT NULL,
   `iva` decimal(10,2) NOT NULL,
   `importe` decimal(10,2) NOT NULL,
   `especial` varchar(255) COLLATE latin1_general_ci DEFAULT '0',
   `complemento` text COLLATE latin1_general_ci,
   PRIMARY KEY (`id_cotizacionproducto`)
-) ENGINE=InnoDB AUTO_INCREMENT=58137 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=58143 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- ----------------------------
 -- Table structure for deprecated_notasconsecutivo
@@ -493,7 +493,7 @@ CREATE TABLE `existencias` (
   KEY `id_producto` (`id_producto`),
   KEY `cantidad` (`cantidad`),
   KEY `lote` (`lote`)
-) ENGINE=MyISAM AUTO_INCREMENT=6633 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=6634 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- ----------------------------
 -- Table structure for facturas
@@ -519,6 +519,10 @@ CREATE TABLE `facturas` (
   `id_almacen` int(3) unsigned NOT NULL DEFAULT '0',
   `licitacion` varchar(255) COLLATE latin1_general_ci DEFAULT '',
   `leyenda` varchar(300) COLLATE latin1_general_ci DEFAULT NULL,
+  `recargo_id` int(11) DEFAULT NULL,
+  `recargo_concepto` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
+  `recargo_porcentaje` decimal(5,2) NOT NULL DEFAULT '0.00',
+  `recargo_importe` decimal(10,2) NOT NULL DEFAULT '0.00',
   `status` int(1) NOT NULL DEFAULT '0' COMMENT '0: Normal | 1: Cancelada',
   PRIMARY KEY (`folio`),
   UNIQUE KEY `folio` (`folio`,`serie`),
@@ -544,6 +548,7 @@ CREATE TABLE `facturas_productos` (
   `cantidad` decimal(10,3) NOT NULL COMMENT 'Cantidad de descuento en existencias',
   `canti_` decimal(10,3) DEFAULT '0.000' COMMENT 'Cantidad que se mostrará en la factura',
   `unidad` varchar(255) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
+  `unidad_factura` varchar(255) NOT NULL,
   `especial` varchar(255) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT '0',
   `complemento` text CHARACTER SET latin1 COLLATE latin1_general_ci,
   `precio` decimal(10,2) NOT NULL,
@@ -555,7 +560,7 @@ CREATE TABLE `facturas_productos` (
   KEY `fp_alm` (`almacen`),
   KEY `fp_im` (`importe`),
   KEY `fp_fol` (`folio_factura`,`serie`)
-) ENGINE=MyISAM AUTO_INCREMENT=155008 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=180049 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for ingresos
@@ -625,7 +630,7 @@ CREATE TABLE `minmax_productos` (
   `max` int(11) NOT NULL,
   `status` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2890 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3062 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- ----------------------------
 -- Table structure for movimientos
@@ -651,7 +656,7 @@ CREATE TABLE `movimientos` (
   KEY `id_usuario` (`id_usuario`),
   KEY `id_almacen_origen` (`id_almacen`),
   KEY `mov_key` (`folio`,`serie`,`id_tipomovimiento`,`id_producto`,`lote`)
-) ENGINE=MyISAM AUTO_INCREMENT=162466 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=162488 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- ----------------------------
 -- Table structure for movimientos_bancos
@@ -784,7 +789,7 @@ CREATE TABLE `precios` (
   KEY `id_producto` (`id_producto`),
   KEY `cliente` (`cliente`),
   KEY `precio` (`precio`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- ----------------------------
 -- Table structure for precio_minimo
@@ -807,6 +812,7 @@ CREATE TABLE `productos` (
   `descripcion` varchar(255) COLLATE latin1_general_ci NOT NULL DEFAULT '',
   `codigo_barras` varchar(50) COLLATE latin1_general_ci NOT NULL DEFAULT '',
   `precio_publico` decimal(10,3) unsigned NOT NULL DEFAULT '0.000',
+  `unidad` varchar(255) COLLATE latin1_general_ci DEFAULT 'PZA',
   `iva` decimal(2,0) NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0: Activo | 1: Inactivo | 2: Eliminado',
   PRIMARY KEY (`id_producto`),
@@ -815,8 +821,9 @@ CREATE TABLE `productos` (
   KEY `codigo_barras` (`codigo_barras`),
   KEY `precio_publico` (`precio_publico`),
   KEY `iva` (`iva`),
-  KEY `eliminado` (`status`)
-) ENGINE=MEMORY AUTO_INCREMENT=8151 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  KEY `eliminado` (`status`),
+  KEY `unidad` (`unidad`)
+) ENGINE=MEMORY DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- ----------------------------
 -- Table structure for productos_solido
@@ -827,6 +834,7 @@ CREATE TABLE `productos_solido` (
   `descripcion` varchar(255) COLLATE latin1_general_ci NOT NULL DEFAULT '',
   `codigo_barras` varchar(50) COLLATE latin1_general_ci NOT NULL DEFAULT '',
   `precio_publico` decimal(10,3) unsigned NOT NULL DEFAULT '0.000',
+  `unidad` varchar(255) COLLATE latin1_general_ci DEFAULT 'PZA',
   `iva` decimal(2,0) NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0: Activo | 1: Inactivo | 2: Eliminado',
   PRIMARY KEY (`id_producto`),
@@ -835,8 +843,9 @@ CREATE TABLE `productos_solido` (
   KEY `codigo_barras` (`codigo_barras`),
   KEY `precio_publico` (`precio_publico`),
   KEY `iva` (`iva`),
-  KEY `eliminado` (`status`)
-) ENGINE=MyISAM AUTO_INCREMENT=8151 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  KEY `eliminado` (`status`),
+  KEY `unidad` (`unidad`)
+) ENGINE=MyISAM AUTO_INCREMENT=8156 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- ----------------------------
 -- Table structure for proveedores
@@ -858,6 +867,22 @@ CREATE TABLE `proveedores` (
   PRIMARY KEY (`clave`),
   KEY `pc` (`clave`)
 ) ENGINE=MyISAM AUTO_INCREMENT=138 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+-- ----------------------------
+-- Table structure for recargos
+-- ----------------------------
+DROP TABLE IF EXISTS `recargos`;
+CREATE TABLE `recargos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `etiqueta` varchar(255) NOT NULL,
+  `porcentaje` decimal(5,2) NOT NULL,
+  `activo` int(1) NOT NULL DEFAULT '0' COMMENT '0: Inactivo, 1: Activo, 2: Eliminado',
+  `usuario` int(11) NOT NULL,
+  `fechaRegistro` datetime DEFAULT NULL,
+  `fechaCambio` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `rec_indx` (`id`,`etiqueta`,`porcentaje`,`activo`,`usuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for retiros
@@ -976,7 +1001,7 @@ CREATE TABLE `usuarios` (
   KEY `id_almacen` (`almacenes`),
   KEY `id_entidad` (`id_entidad`),
   KEY `id_tipoestadousuario` (`status`)
-) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=35 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- ----------------------------
 -- Table structure for vars
@@ -1067,7 +1092,32 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW
 -- View structure for cotizaciones_productos_vista
 -- ----------------------------
 DROP VIEW IF EXISTS `cotizaciones_productos_vista`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `cotizaciones_productos_vista` AS select `cotizaciones_productos`.`id_cotizacionproducto` AS `id_cotizacionproducto`,`cotizaciones_productos`.`folio_cotizacion` AS `folio_cotizacion`,`cotizaciones_productos`.`id_producto` AS `id_producto`,`cotizaciones_productos`.`cantidad` AS `cantidad`,`cotizaciones_productos`.`unidad` AS `unidad`,`cotizaciones_productos`.`precio` AS `precio`,`cotizaciones_productos`.`iva` AS `iva`,`cotizaciones_productos`.`importe` AS `importe`,`cotizaciones_productos`.`especial` AS `especial`,`cotizaciones_productos`.`complemento` AS `complemento`,'' AS `lote` from `cotizaciones_productos` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `cotizaciones_productos_vista` AS SELECT
+	cp.id_cotizacionproducto AS id_cotizacionproducto,
+	cp.folio_cotizacion AS folio_cotizacion,
+	cp.id_producto AS id_producto,
+	cp.cantidad AS cantidad,
+	cp.unidad,
+	cp.unidad unidad_factura,
+	cp.precio AS precio,
+	cp.iva AS iva,
+	cp.importe AS importe,
+	cp.especial AS especial,
+	cp.complemento AS complemento,
+	'' AS lote
+FROM
+	cotizaciones_productos cp ;
+
+-- ----------------------------
+-- View structure for facturas_listado
+-- ----------------------------
+DROP VIEW IF EXISTS `facturas_listado`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost`  VIEW `facturas_listado` AS SELECT
+f.*,
+c.nombre cliente_nombre
+FROM
+facturas AS f
+INNER JOIN clientes_memory AS c ON f.id_cliente = c.clave ;
 
 -- ----------------------------
 -- Procedure structure for clienteCredito
@@ -1197,9 +1247,16 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `facturaImporte`(_folio varchar(10), _serie varchar(10))
 BEGIN
 	DECLARE factura_importe DECIMAL(10, 2);
+	DECLARE factura_recargo DECIMAL(10, 2);
 	
 	IF _serie IS NOT NULL THEN
-		SELECT ROUND( SUM( canti_ * ( precio + ( precio * ( iva / 100 ) ) ) ) , 2 ) INTO factura_importe
+		SELECT recargo_importe INTO factura_recargo FROM facturas
+		WHERE folio = CONVERT(_folio using latin1) COLLATE latin1_general_ci AND
+		serie = CONVERT(_serie using latin1) COLLATE latin1_general_ci;
+
+		SELECT
+		ROUND((ROUND(SUM(canti_ * precio), 2) + factura_recargo) + (((ROUND(SUM(canti_ * precio), 2 ) + factura_recargo)) * (iva / 100)), 2)
+		INTO factura_importe
 		FROM facturas_productos WHERE
 		folio_factura = CONVERT(_folio using latin1) COLLATE latin1_general_ci AND
 		serie = CONVERT(_serie using latin1) COLLATE latin1_general_ci;
@@ -1208,7 +1265,13 @@ BEGIN
 		folio = CONVERT(_folio using latin1) COLLATE latin1_general_ci AND
 		serie = CONVERT(_serie using latin1) COLLATE latin1_general_ci;
 	ELSE
-		SELECT ROUND( SUM( canti_ * ( precio + ( precio * ( iva / 100 ) ) ) ) , 2 ) INTO factura_importe
+		SELECT recargo_importe INTO factura_recargo FROM facturas
+		WHERE folio = CONVERT(_folio using latin1) COLLATE latin1_general_ci AND
+		serie IS NULL;
+
+		SELECT
+		ROUND((ROUND(SUM(canti_ * precio), 2) + factura_recargo) + (((ROUND(SUM(canti_ * precio), 2 ) + factura_recargo)) * (iva / 100)), 2)
+		INTO factura_importe
 		FROM facturas_productos WHERE
 		folio_factura = CONVERT(_folio using latin1) COLLATE latin1_general_ci AND
 		serie IS NULL;
@@ -1611,11 +1674,53 @@ CREATE TRIGGER `mov_del` BEFORE DELETE ON `movimientos` FOR EACH ROW BEGIN
 END
 ;;
 DELIMITER ;
+DROP TRIGGER IF EXISTS `instrimmem`;
+DELIMITER ;;
+CREATE TRIGGER `instrimmem` BEFORE INSERT ON `productos` FOR EACH ROW BEGIN
+SET NEW.descripcion = TRIM(CHAR(9) FROM TRIM(NEW.descripcion));
+SET NEW.codigo_barras = TRIM(CHAR(9) FROM TRIM(NEW.codigo_barras));
+END
+;;
+DELIMITER ;
+DROP TRIGGER IF EXISTS `updtrimmem`;
+DELIMITER ;;
+CREATE TRIGGER `updtrimmem` BEFORE UPDATE ON `productos` FOR EACH ROW BEGIN
+SET NEW.descripcion = TRIM(NEW.descripcion);
+SET NEW.codigo_barras = TRIM(NEW.codigo_barras);
+END
+;;
+DELIMITER ;
 DROP TRIGGER IF EXISTS `prod2solido`;
 DELIMITER ;;
 CREATE TRIGGER `prod2solido` AFTER UPDATE ON `productos` FOR EACH ROW BEGIN
 	DELETE FROM productos_solido WHERE id_producto = NEW.id_producto;
 	INSERT INTO productos_solido SELECT * FROM productos WHERE id_producto = NEW.id_producto;
 END
+;;
+DELIMITER ;
+DROP TRIGGER IF EXISTS `instrim`;
+DELIMITER ;;
+CREATE TRIGGER `instrim` BEFORE INSERT ON `productos_solido` FOR EACH ROW BEGIN
+SET NEW.descripcion = TRIM(CHAR(9) FROM TRIM(NEW.descripcion));
+SET NEW.codigo_barras = TRIM(CHAR(9) FROM TRIM(NEW.codigo_barras));
+END
+;;
+DELIMITER ;
+DROP TRIGGER IF EXISTS `updtrim`;
+DELIMITER ;;
+CREATE TRIGGER `updtrim` BEFORE UPDATE ON `productos_solido` FOR EACH ROW BEGIN
+SET NEW.descripcion = TRIM(CHAR(9) FROM TRIM(NEW.descripcion));
+SET NEW.codigo_barras = TRIM(CHAR(9) FROM TRIM(NEW.codigo_barras));
+END
+;;
+DELIMITER ;
+DROP TRIGGER IF EXISTS `rec_fec_reg`;
+DELIMITER ;;
+CREATE TRIGGER `rec_fec_reg` BEFORE INSERT ON `recargos` FOR EACH ROW SET NEW.fechaRegistro = NOW()
+;;
+DELIMITER ;
+DROP TRIGGER IF EXISTS `rec_fec_upd`;
+DELIMITER ;;
+CREATE TRIGGER `rec_fec_upd` BEFORE UPDATE ON `recargos` FOR EACH ROW SET NEW.fechaCambio = NOW()
 ;;
 DELIMITER ;

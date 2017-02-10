@@ -1,5 +1,5 @@
 <?php
-include("../sys/funciones/basedatos.php");
+include("../tornero/funciones/basedatos.php");
 
 $folio = trim($_GET['folio'].$_POST['folio']);
 $serie = trim($_GET['serie'].$_POST['serie']);
@@ -10,7 +10,7 @@ unset($db);
 $db = dbFacile::open('mysql', $dataBase, DB_USER, DB_PASSWORD, DB_HOST);
 
 include('helpers.php');
-include("../sys/funciones/funciones.php");
+include("../tornero/funciones/funciones.php");
 
 $r = array(
 	'error' => 0,
@@ -24,8 +24,8 @@ $carpetas = array(
 	1 => 'descargados'
 );
 
-// error_reporting(E_ALL);
-// ini_set('display_errors', 1);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 //¿Es CFDI?
 if(!isCFDIfecha($db, $folio, $serie))
@@ -94,8 +94,8 @@ if(strlen($folio) > 0 and (int)$folio > 0 and strlen($serie) > 0 and $r['error']
 		$fecha_error_cfdi = $db->fetchCell("SELECT TIME_FORMAT(TIMEDIFF(NOW(), fecha_captura), '%H') FROM facturas WHERE folio = '{$folio}' AND serie ='{$serie}' LIMIT 1");
 		if($fecha_error == 0 or $fecha_error_cfdi > 71)
 		{
-			$r['error']++;
-			$r['msg'] = 'Esta factura tiene una fecha de emisión demasiado antigua. Edítela para poder proceder.';
+			// $r['error']++;
+			// $r['msg'] = 'Esta factura tiene una fecha de emisión demasiado antigua. Edítela para poder proceder.';
 		}
 	}
 	
@@ -130,15 +130,20 @@ if(strlen($folio) > 0 and (int)$folio > 0 and strlen($serie) > 0 and $r['error']
 		$doc->encoding = 'UTF-8';
 		$xml = $doc->saveXML();
 		
-		$r['xml'] = str_replace("&#10;","\n", $xml);
-		$xml = CONECTOR . 'pendientes/' .  $advansFile. '.xml';
+		$r['xml'] = str_replace("&#10;", "\n", $xml);
 		
-		//25 ago 2016 - Cliente con RFC especial
+		//25 ago 2016 - Cliente con RFC &
 		$r['xml'] = str_replace("AP&amp;AMP;000225V19","AP&000225V19", $r['xml']);
 		$r['xml'] = str_replace("ARRENDADORA P&amp;AMP;C SA DE CV","ARRENDADORA P&C SA DE CV", $r['xml']);
 		
+		//29 nov 2016 - Cliente con RFC con &
+		$r['xml'] = str_replace("AP&amp;AMP;000225V19","AP&000225V19", $r['xml']);
+		$r['xml'] = str_replace("PROYECTO &amp;AMP; CONSTRUCCIONES HEKA SA DE CV","PROYECTO & CONSTRUCCIONES HEKA SA DE CV", $r['xml']);
+		
+		$xmlFile = CONECTOR . 'pendientes/' .  $advansFile. '.xml';
+		
 		//Escribir archivo
-		file_put_contents($xml, $r['xml']);
+		file_put_contents($xmlFile, $r['xml']);
 	}
 }
 else if($r['error'] == 0)
